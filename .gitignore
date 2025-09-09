@@ -1,0 +1,41 @@
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.cache
+*.log
+*.pdb
+
+# Node / Vite
+node_modules/
+giftup-frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+
+# Env/secrets
+.env
+
+# Docker/build outputs
+**/out/
+postgres_data/
+storage_data/
+
+# IDE/editor
+.vs/
+.vscode/
+*.swp
+*.swo
+*.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Local data dumps
+data/
+

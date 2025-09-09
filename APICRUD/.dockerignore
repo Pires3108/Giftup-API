@@ -1,0 +1,38 @@
+# Arquivos de build e cache
+bin/
+obj/
+out/
+
+# Arquivos de desenvolvimento
+*.user
+*.suo
+*.cache
+*.log
+
+# Arquivos de configuração local
+appsettings.Development.json
+launchSettings.json
+
+# Arquivos do Git
+.git/
+.gitignore
+
+# Arquivos de documentação
+README.md
+*.md
+
+# Arquivos de IDE
+.vs/
+.vscode/
+*.swp
+*.swo
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Arquivos de migração (se não forem necessários no container)
+Migrations/
+
+# Arquivos de dados
+data/
