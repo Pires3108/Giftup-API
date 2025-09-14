@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { Menu, ShoppingCart } from "lucide-react";
 import { isLoggedIn } from "./Services/auth";
 import Button from "./components/Button";
+import { jwtDecode } from "jwt-decode";
 
 import Home from "./Pages/Home";
 import Pedidos from "./Pages/Pedidos";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Profile from "./Pages/Profile";
+import Itens from "./Pages/Itens";
+
 
 export default function GiftUpApp() {
   const [screen, setScreen] = useState("home");
@@ -15,14 +18,20 @@ export default function GiftUpApp() {
   const menuRef = useRef(null);
   const [logado, setLogado] = useState(false);
   const [mensagem, setMensagem] = useState("");
+  const [tokenemail, setTokenemail] = useState("");
 
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem("token");
+      const user = token ? jwtDecode(token) : null;
+      if (user !== null) {
+      const DecodedEmail = user["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
       if (token) {
         setLogado(isLoggedIn());
+        setTokenemail(DecodedEmail);
       } else {
         setLogado(false);
+      }
       }
     };
     
@@ -51,8 +60,24 @@ export default function GiftUpApp() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setLogado(false);
+    setTokenemail("");
     setScreen("home");
     setMensagem("");
+  };
+
+  const handleLoginSuccess = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const user = jwtDecode(token);
+        const DecodedEmail = user["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
+        setLogado(true);
+        setTokenemail(DecodedEmail);
+        console.log("Login success - Email atualizado:", DecodedEmail);
+      } catch (error) {
+        console.error("Erro ao decodificar token:", error);
+      }
+    }
   };
 
   const handleCartClick = () => {
@@ -136,6 +161,19 @@ export default function GiftUpApp() {
             </>
           ) : (
             <>
+            {tokenemail === "admin@admin.com" ? (
+              <p
+                style={{
+                  cursor: "pointer",
+                  color: screen === "Itens" ? "orange" : "#fff",
+                }}
+                onClick={() => handleOptionClick("Itens")}
+              >
+                Itens
+              </p>
+            ) : (
+              <></>
+            )}
               <p
                 style={{
                   cursor: "pointer",
@@ -176,10 +214,12 @@ export default function GiftUpApp() {
             goToRegister={() => handleOptionClick("register")}
             goToHome={() => handleOptionClick("home")}
             setLogado={setLogado}
+            onLoginSuccess={handleLoginSuccess}
           />
         )}
         {screen === "register" && <Register goToLogin={() => handleOptionClick("login")} />}
         {screen === "profile" && <Profile />}
+        {screen === "Itens" && <Itens />}
       </div>
     </div>
   );

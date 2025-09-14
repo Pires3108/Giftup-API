@@ -24,7 +24,7 @@ export default function Register({ goToLogin }) {
       const response = await api.post("/cliente", novoCliente);
       setCliente(novoCliente);
 
-      setMensagem("✅ Login feito com sucesso!");
+      setMensagem("✅ Cadastro feito com sucesso! Redirecionando...");
       setCorMensagem("green");
       setTimeout(() => {
         setMensagem("");
@@ -37,9 +37,17 @@ export default function Register({ goToLogin }) {
       inputSenha.current.value = "";
 
     } catch (error) {
-      setMensagem("❌ Erro ao fazer login!");
+      let msg = "❌ Erro ao cadastrar!";
+      const status = error.response?.status;
+      const data = error.response?.data;
+      if (status === 409) {
+        msg = "❌ Email já cadastrado. Tente fazer login ou use outro email.";
+      } else if (status === 400 && data?.errors) {
+        msg = "❌ Dados inválidos. Verifique os campos e tente novamente.";
+      }
+      setMensagem(msg);
       setCorMensagem("red");
-      setTimeout(() => setMensagem(""), 1000);
+      setTimeout(() => setMensagem(""), 2000);
 
       console.error(
         "Erro ao cadastrar:",

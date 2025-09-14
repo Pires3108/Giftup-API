@@ -96,7 +96,7 @@ export default function ProductCard({ product }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f5f5f5"
+          background: "white"
         }}>
         {loadingImage ? (
           <div style={{ color: "#666" }}>
@@ -115,8 +115,8 @@ export default function ProductCard({ product }) {
         )}
       </div>
       <div style={{
-        background: "#333",
-        color: "#fff",
+        background: "rgb(253, 253, 253)",
+        color: "black",
         padding: "15px"
       }}>
         <p style={{

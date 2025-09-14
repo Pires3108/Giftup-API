@@ -8,7 +8,7 @@ namespace APICRUD.Extensions
         {
             var id = user.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(id))
-                throw new UnauthorizedAccessException("Token inválido ou sem ID do cliente");
+                throw new UnauthorizedAccessException("Token invalido ou sem ID do cliente");
 
             return int.Parse(id);
         }

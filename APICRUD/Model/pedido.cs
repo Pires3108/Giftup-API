@@ -1,24 +1,16 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace APICRUD.Model
 {
-    [Table("pedidos")]
     public class pedido
     {
-        [Key]
         public int id { get; set; }
-
         public int cliente_id { get; set; }
-
         public int status_pedido { get; set; }
-        [NotMapped]
         public decimal total { get; set; }
 
-        [ForeignKey("cliente_id")]
         [JsonIgnore]
-        public cliente clientes { get; set; }
+        public cliente? clientes { get; set; }
 
         public pedido() { }
 

@@ -107,7 +107,7 @@ export default function Pedidos({ goToHome }) {
       }
 
       const novaQuantidade = itemEncontrado.quantidade + mudanca;
-      
+
       if (novaQuantidade < 1) {
         setMensagem("❌ Quantidade não pode ser menor que 1.");
         setCorMensagem("red");
@@ -212,30 +212,29 @@ export default function Pedidos({ goToHome }) {
                 boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
               }}
             >
-              <h3 style={{ fontWeight: "bold" }}>Pedido #{pedido.id}</h3>
+              <h3 style={{ fontWeight: "bold" }}>{pedido.items[0].nome}</h3>
 
               {(pedido.items || []).map((item, index) => (
-                <div key={index} style={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  alignItems: "center", 
+                <div key={index} style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   marginBottom: "8px",
                   padding: "8px",
                   background: "#f8f9fa",
                   borderRadius: "8px"
                 }}>
                   <div>
-                    <p style={{ margin: "0", fontWeight: "bold" }}>{item.nome}</p>
-                    <p style={{ margin: "0", fontSize: "14px", color: "#666" }}>
+                    <h2 style={{ margin: "0", fontSize: "14px", color: "#666" }}>
                       Qtd: {item.quantidade} - R$ {item.preco.toFixed(2)}
-                    </p>
+                    </h2>
                   </div>
                   <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                     <Button
                       onClick={() => alterarQuantidade(pedido.id, item.item_id, -1)}
-                      style={{ 
-                        background: "#dc3545", 
-                        color: "white", 
+                      style={{
+                        background: "#dc3545",
+                        color: "white",
                         padding: "4px 8px",
                         fontSize: "12px",
                         minWidth: "auto"
@@ -245,9 +244,9 @@ export default function Pedidos({ goToHome }) {
                     </Button>
                     <Button
                       onClick={() => alterarQuantidade(pedido.id, item.item_id, 1)}
-                      style={{ 
-                        background: "orange", 
-                        color: "white", 
+                      style={{
+                        background: "orange",
+                        color: "white",
                         padding: "4px 8px",
                         fontSize: "12px",
                         minWidth: "auto"

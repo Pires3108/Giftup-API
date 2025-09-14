@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Button from "../components/Button";
 import api from "../Services/API";
 
-export default function Login({ goToRegister, goToHome, setLogado}) {
+export default function Login({ goToRegister, goToHome, setLogado, onLoginSuccess}) {
   const [cliente, setCliente] = useState(null);
   const [mensagem, setMensagem] = useState("");
   const [corMensagem, setCorMensagem] = useState("black");
@@ -24,6 +24,11 @@ export default function Login({ goToRegister, goToHome, setLogado}) {
       setMensagem("✅ Login feito com sucesso!");
       setCorMensagem("green");
       setLogado(true);
+      
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      }
+      
       setTimeout(() => {
         setMensagem("");
         goToHome();
@@ -32,7 +37,7 @@ export default function Login({ goToRegister, goToHome, setLogado}) {
       inputEmail.current.value = "";
       inputSenha.current.value = "";
     } catch (error) {
-      setMensagem("❌ Erro ao fazer login!");
+      setMensagem("❌ Email ou senha invalidos!");
       setCorMensagem("red");
       setTimeout(() => setMensagem(""), 1000);
   

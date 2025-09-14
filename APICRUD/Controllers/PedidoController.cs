@@ -83,7 +83,7 @@ namespace APICRUD.Controllers
             try
             {
                 _pedidoRepository.DeletePedido(clienteId, pedidoId);
-                return Ok("Pedido exclu�do com sucesso.");
+                return Ok("Pedido excluído com sucesso.");
             }
             catch (Exception ex)
             {

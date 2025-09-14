@@ -119,7 +119,7 @@ export default function Profile() {
 
       setMensagem("✅ Conta excluída com sucesso!");
       setCorMensagem("green");
-      
+
       setTimeout(() => {
         localStorage.removeItem("token");
         window.location.href = "/";
@@ -135,94 +135,311 @@ export default function Profile() {
   if (loading) return <p>Carregando perfil...</p>;
 
   return (
-    <main style={{ maxWidth: "500px", margin: "30px auto", padding: "0 16px", boxSizing: "border-box" }}>
-      <section style={{ background: "#f7f7f7", borderRadius: "12px", padding: "20px", boxSizing: "border-box" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: "12px", borderBottom: "1px solid #eee", marginBottom: "20px" }}>
+    <main style={{
+      maxWidth: "600px",
+      margin: "20px auto",
+      padding: "0 20px",
+      boxSizing: "border-box",
+      minHeight: "calc(100vh - 100px)"
+    }}>
+      <section style={{
+        background: "#f7f7f7",
+        borderRadius: "16px",
+        padding: "30px",
+        boxSizing: "border-box",
+        boxShadow: "0 8px 32px rgba(255, 94, 7, 0.18)"
+      }}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingBottom: "20px",
+          borderBottom: "2px solid rgba(163, 162, 162, 0.2)",
+          marginBottom: "30px",
+          flexWrap: "wrap",
+          gap: "15px"
+        }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "600" }}>Meus dados</h2>
-            <p style={{ margin: "2px 0 0", color: "#888", fontSize: "13px" }}>Edite suas informações pessoais</p>
+            <h2 style={{
+              margin: 0,
+              fontSize: "28px",
+              fontWeight: "700",
+              color: "black",
+              textShadow: "0 2px 4px rgba(54, 54, 54, 0.1)"
+            }}>
+              Meus dados
+            </h2>
+            <p style={{
+              margin: "8px 0 0",
+              color: "rgba(0, 0, 0, 0.9)",
+              fontSize: "16px",
+              fontWeight: "400"
+            }}>
+              Edite suas informações pessoais
+            </p>
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div style={
+            { 
+              display: "flex", 
+              gap: "12px", 
+              flexWrap: "wrap" 
+              }
+              }>
             {!editando && (
               <Button
                 onClick={() => setEditando(true)}
-                style={{ background: "#fff", border: "1px solid #ddd", color: "#333", padding: "8px 12px", borderRadius: "8px" }}
+                style={{
+                  background: "rgba(250, 246, 246, 0.9)",
+                  border: "2px solid rgba(255, 254, 254, 0.3)",
+                  color: "#ff6b1a",
+                  padding: "12px 20px",
+                  borderRadius: "12px",
+                  fontWeight: "600",
+                  fontSize: "14px",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.background = "rgba(201, 198, 198, 0.9)";
+                  e.target.style.transform = "translateY(-2px)";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.background = "rgba(255, 255, 255, 0.9)";
+                  e.target.style.transform = "translateY(0)";
+                }}
               >
-                Editar
+                ✏️ Editar
               </Button>
             )}
             <Button
               onClick={handleDeleteAccount}
-              style={{ background: "#dc3545", border: "1px solid #dc3545", color: "#fff", padding: "8px 12px", borderRadius: "8px" }}
+              style={{
+                background: "rgba(220, 53, 69, 0.9)",
+                border: "2px solid rgba(220, 53, 69, 0.3)",
+                color: "#fff",
+                padding: "12px 20px",
+                borderRadius: "12px",
+                fontWeight: "600",
+                fontSize: "14px",
+                transition: "all 0.3s ease",
+                boxShadow: "0 4px 12px rgba(220, 53, 69, 0.3)"
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = "#dc3545";
+                e.target.style.transform = "translateY(-2px)";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = "rgba(220, 53, 69, 0.9)";
+                e.target.style.transform = "translateY(0)";
+              }}
             >
-              Excluir Conta
+              🗑️ Excluir Conta
             </Button>
           </div>
         </div>
 
-        <form style={{ display: "grid", gap: "16px" }} onSubmit={handleSubmit}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "500" }}>Nome completo</label>
+        <form style={{ 
+          display: "grid", 
+          gap: "20px" 
+          }} 
+          onSubmit={handleSubmit}>
+          <div style={{ 
+            display: "flex", 
+            flexDirection: "column", 
+            gap: "8px" }}>
+            <label style={{
+              fontSize: "16px",
+              fontWeight: "600",
+              color: "rgb(61, 60, 60)",
+              textShadow: "0 1px 2px rgba(0,0,0,0.1)"
+            }}>
+              Nome completo
+            </label>
             <input
               type="text"
               name="nome_cliente"
               value={form.nome_cliente}
               onChange={handleChange}
               disabled={!editando}
-              style={{ width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", backgroundColor: !editando ? "#f5f5f5" : "#fff" }}
+              style={{
+                width: "100%",
+                padding: "14px 16px",
+                border: `2px solid ${!editando ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.8)"}`,
+                borderRadius: "12px",
+                fontSize: "16px",
+                  backgroundColor: !editando ? "rgba(177, 171, 171, 0.1)" : "rgba(255, 255, 255, 0.95)",
+                  color: !editando ? "rgba(170, 166, 166, 0.8)" : "#333",
+                transition: "all 0.3s ease",
+                boxSizing: "border-box"
+              }}
             />
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "500" }}>E-mail</label>
-            <input
-              type="email"
-              name="email_cliente"
-              value={form.email_cliente}
-              onChange={handleChange}
-              disabled={!editando}
-              style={{ width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", backgroundColor: !editando ? "#f5f5f5" : "#fff" }}
-            />
-          </div>
+           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+             <label style={{
+               fontSize: "16px",
+               fontWeight: "600",
+               color: "rgb(61, 60, 60)",
+               textShadow: "0 1px 2px rgba(0,0,0,0.1)"
+             }}>
+               E-mail
+             </label>
+             <input
+               type="email"
+               name="email_cliente"
+               value={form.email_cliente}
+               onChange={handleChange}
+               disabled={!editando}
+               placeholder="Digite seu e-mail"
+               style={{
+                 width: "100%",
+                 padding: "14px 16px",
+                 border: `2px solid ${!editando ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.8)"}`,
+                 borderRadius: "12px",
+                 fontSize: "16px",
+                 backgroundColor: !editando ? "rgba(177, 171, 171, 0.1)" : "rgba(255, 255, 255, 0.95)",
+                 color: !editando ? "rgba(170, 166, 166, 0.8)" : "#333",
+                 transition: "all 0.3s ease",
+                 boxSizing: "border-box"
+               }}
+             />
+           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "500" }}>Data de nascimento</label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <label style={{
+              fontSize: "16px",
+              fontWeight: "600",
+              color: "rgb(61, 60, 60)",
+              textShadow: "0 1px 2px rgba(0,0,0,0.1)"
+            }}>
+              Data de nascimento
+            </label>
             <input
               type="date"
               name="datanascimento_cliente"
               value={form.datanascimento_cliente}
               onChange={handleChange}
               disabled={!editando}
-              style={{ width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", backgroundColor: !editando ? "#f5f5f5" : "#fff" }}
+              style={{
+                width: "100%",
+                padding: "14px 16px",
+                border: `2px solid ${!editando ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.8)"}`,
+                borderRadius: "12px",
+                fontSize: "16px",
+                backgroundColor: !editando ? "rgba(177, 171, 171, 0.1)" : "rgba(255, 255, 255, 0.95)",
+                color: !editando ? "rgba(170, 166, 166, 0.8)" : "#333",
+                transition: "all 0.3s ease",
+                boxSizing: "border-box"
+              }}
             />
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "500" }}>Nova senha (opcional)</label>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <label style={{
+              fontSize: "16px",
+              fontWeight: "600",
+              color: "rgb(61, 60, 60)",
+              textShadow: "0 1px 2px rgba(0,0,0,0.1)"
+            }}>
+              Nova senha (opcional)
+            </label>
             <input
               type="password"
               name="senha"
               value={form.senha}
               onChange={handleChange}
-              placeholder="Deixe em branco para manter"
+              placeholder={"Deixe em branco para manter"}
               disabled={!editando}
-              style={{ width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", backgroundColor: !editando ? "#f5f5f5" : "#fff" }}
+              style={{
+                width: "100%",
+                padding: "14px 16px",
+                border: `2px solid ${!editando ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.8)"}`,
+                borderRadius: "12px",
+                fontSize: "16px",
+                backgroundColor: !editando ? "rgba(177, 171, 171, 0.1)" : "rgba(255, 255, 255, 0.95)",
+                color: !editando ? "rgba(170, 166, 166, 0.8)" : "#333",
+                transition: "all 0.3s ease",
+                boxSizing: "border-box"
+              }}
             />
           </div>
 
           {editando && (
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-              <Button type="button" onClick={handleCancel} style={{ background: "#dc3545", color: "#fff", borderRadius: "8px" }}>
-                Cancelar
+            <div style={{
+              display: "flex",
+              gap: "15px",
+              justifyContent: "flex-end",
+              marginTop: "10px",
+              flexWrap: "wrap"
+            }}>
+              <Button
+                type="button"
+                onClick={handleCancel}
+                style={{
+                  background: "rgba(220, 53, 69, 0.9)",
+                  color: "#fff",
+                  borderRadius: "12px",
+                  padding: "12px 24px",
+                  fontWeight: "600",
+                  fontSize: "16px",
+                  border: "2px solid rgba(220, 53, 69, 0.3)",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 4px 12px rgba(220, 53, 69, 0.3)"
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.background = "#dc3545";
+                  e.target.style.transform = "translateY(-2px)";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.background = "rgba(220, 53, 69, 0.9)";
+                  e.target.style.transform = "translateY(0)";
+                }}
+              >
+                ❌ Cancelar
               </Button>
-              <Button type="submit" style={{ background: "#28a745", color: "#fff", borderRadius: "8px" }}>
-                Salvar
+              <Button
+                type="submit"
+                style={{
+                  background: "rgba(40, 167, 69, 0.9)",
+                  color: "#fff",
+                  borderRadius: "12px",
+                  padding: "12px 24px",
+                  fontWeight: "600",
+                  fontSize: "16px",
+                  border: "2px solid rgba(40, 167, 69, 0.3)",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 4px 12px rgba(40, 167, 69, 0.3)"
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.background = "#28a745";
+                  e.target.style.transform = "translateY(-2px)";
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.background = "rgba(40, 167, 69, 0.9)";
+                  e.target.style.transform = "translateY(0)";
+                }}
+              >
+                💾 Salvar
               </Button>
             </div>
           )}
         </form>
 
-        {mensagem && <p style={{ marginTop: "15px", color: corMensagem, fontWeight: "bold" }}>{mensagem}</p>}
+        {mensagem && (
+          <div style={{
+            marginTop: "20px",
+            padding: "15px 20px",
+            borderRadius: "12px",
+            backgroundColor: corMensagem === "green" ? "rgba(40, 167, 69, 0.1)" : "rgba(220, 53, 69, 0.1)",
+            border: `2px solid ${corMensagem === "green" ? "rgba(40, 167, 69, 0.3)" : "rgba(220, 53, 69, 0.3)"}`,
+            color: corMensagem === "green" ? "#155724" : "#721c24",
+            fontWeight: "600",
+            fontSize: "16px",
+            textAlign: "center"
+          }}>
+            {mensagem}
+          </div>
+        )}
       </section>
     </main>
   );

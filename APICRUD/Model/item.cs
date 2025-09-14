@@ -1,18 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-
 namespace APICRUD.Model
 {
-    [Table("itens")]
     public class item
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
-        public string nome_item { get; set; }
+        public string nome_item { get; set; } = string.Empty;
         public decimal preco_item { get; set; }
-        public string foto_item { get; set; }
+        public string foto_item { get; set; } = string.Empty;
 
         public item() { }
 

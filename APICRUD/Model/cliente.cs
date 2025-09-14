@@ -1,18 +1,14 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace APICRUD.Model
 {
-    [Table("clientes")]
     public class cliente
     {
-        [Key]
         public int id { get; set; }
-        public string nome_cliente { get; set; }
+        public string nome_cliente { get; set; } = string.Empty;
         public DateOnly datanascimento_cliente { get; set; }
-        public string email_cliente { get; set; }
-        public string senha { get; set; }
+        public string email_cliente { get; set; } = string.Empty;
+        public string senha { get; set; } = string.Empty;
         
         [JsonIgnore]
         public bool islogged { get; set; } = false;

@@ -152,6 +152,8 @@ COPY public.itens (id, nome_item, preco_item, foto_item) FROM stdin;
 1	Caneca personalizada	24.99	Storage/CanecaP.png
 2	Copo termico	99.99	Storage/shopping.png
 3	Relogio de mesa	149.99	Storage/download.png
+4	Porta Retrato	119.99	Storage/7da1bf79-9faf-4000-aa21-a9486df39674_PortaRetrato_imagem.jpg
+5	Caneta Polo	549.99	Storage/f25676f4-162f-4f72-aa63-494cac79fa95_KitCanetetaImagem.png
 \.
 
 
@@ -182,7 +184,7 @@ SELECT pg_catalog.setval('public.clientes_id_seq', 1, true);
 -- Name: itens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nicolas
 --
 
-SELECT pg_catalog.setval('public.itens_id_seq', 3, true);
+SELECT pg_catalog.setval('public.itens_id_seq', 5, true);
 
 
 --

@@ -1,0 +1,20 @@
+# Solution-level ignores
+**/bin
+**/obj
+**/.vs
+**/.vscode
+**/node_modules
+**/npm-debug.log
+**/yarn.lock
+**/package-lock.json
+**/.DS_Store
+
+# Local database and artifacts are mounted, not built
+data
+APICRUD/APICRUD/Storage
+
+# Git
+.git
+.gitignore
+
+
