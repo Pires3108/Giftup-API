@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import api from "../Services/API";
 import { isLoggedIn } from "../Services/auth";
 
@@ -8,7 +8,7 @@ export default function ProductCard({ product }) {
   const [mensagem, setMensagem] = useState("");
   const [corMensagem, setCorMensagem] = useState("black");
 
-  const fetchImage = async () => {
+  const fetchImage = useCallback(async () => {
     try {
       setLoadingImage(true);
 
@@ -25,7 +25,7 @@ export default function ProductCard({ product }) {
     } finally {
       setLoadingImage(false);
     }
-  };
+  }, [product.id]);
 
   useEffect(() => {
     if (product.id) {
@@ -37,7 +37,7 @@ export default function ProductCard({ product }) {
         URL.revokeObjectURL(imageUrl);
       }
     };
-  }, [product.id]);
+  }, [fetchImage, imageUrl, product.id]);
 
   async function handleAddToCart() {
     if (!isLoggedIn()) {
@@ -66,7 +66,7 @@ export default function ProductCard({ product }) {
         ]
       };
 
-      const response = await api.post("/pedido", novoPedido);
+      await api.post("/pedido", novoPedido);
 
       setMensagem("✅ Item adicionado ao carrinho!");
       setCorMensagem("green");
@@ -74,7 +74,7 @@ export default function ProductCard({ product }) {
         setMensagem("");
       }, 3000);
 
-    } catch (error) {
+    } catch {
       setMensagem("❌ Erro ao adicionar item no carrinho!");
       setCorMensagem("red");
       setTimeout(() => {

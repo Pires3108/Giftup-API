@@ -3,7 +3,6 @@ import Button from "../components/Button";
 import api from "../Services/API";
 
 export default function Register({ goToLogin }) {
-  const [cliente, setCliente] = useState(null);
   const [mensagem, setMensagem] = useState("");
   const [corMensagem, setCorMensagem] = useState("black");
 
@@ -21,8 +20,7 @@ export default function Register({ goToLogin }) {
         senha: inputSenha.current.value,
       };
 
-      const response = await api.post("/cliente", novoCliente);
-      setCliente(novoCliente);
+      await api.post("/cliente", novoCliente);
 
       setMensagem("✅ Cadastro feito com sucesso! Redirecionando...");
       setCorMensagem("green");

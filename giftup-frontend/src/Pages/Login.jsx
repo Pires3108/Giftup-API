@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Button from "../components/Button";
 import api from "../Services/API";
 
 export default function Login({ goToRegister, goToHome, setLogado, onLoginSuccess}) {
-  const [cliente, setCliente] = useState(null);
   const [mensagem, setMensagem] = useState("");
   const [corMensagem, setCorMensagem] = useState("black");
 
@@ -20,7 +19,6 @@ export default function Login({ goToRegister, goToHome, setLogado, onLoginSucces
       const response = await api.post('/cliente/login', novoLogin);
   
       localStorage.setItem('token', response.data.token);
-      setCliente(response.data.cliente);
       setMensagem("✅ Login feito com sucesso!");
       setCorMensagem("green");
       setLogado(true);

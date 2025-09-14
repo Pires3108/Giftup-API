@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import api from "../Services/API";
 
 export default function Itens() {
@@ -78,7 +78,7 @@ export default function Itens() {
     );
   };
 
-  const handleSave = async (item) => {
+  const handleSave = useCallback(async (item) => {
     try {
       const preco = parseFloat(item.preco_item);
       if (isNaN(preco) || preco < 0) {
@@ -118,7 +118,7 @@ export default function Itens() {
       setMensagem("Erro ao salvar item. Verifique se o backend está rodando.");
       setTimeout(() => setMensagem(""), 5000);
     }
-  };
+  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -350,7 +350,7 @@ export default function Itens() {
         </div>
       </div>
     ));
-  }, [itens, editando]);
+  }, [itens, editando, handleSave]);
 
   return (
     <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>

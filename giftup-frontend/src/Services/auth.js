@@ -1,5 +1,3 @@
-import api from "./API";
-
 export function isLoggedIn() {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -16,7 +14,7 @@ export function isLoggedIn() {
     }
     
     return true;
-  } catch (error) {
+  } catch {
     localStorage.removeItem("token");
     return false;
   }
