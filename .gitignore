@@ -1,41 +1,54 @@
 # .NET
-**/bin/
-**/obj/
+bin/
+obj/
 *.user
 *.suo
 *.cache
-*.log
+*.dll
 *.pdb
+*.exe
+*.log
 
-# Node / Vite
+# Node.js
 node_modules/
-giftup-frontend/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-dist/
-build/
 
-# Env/secrets
-.env
+# Frontend build
+giftup-frontend/dist/
+giftup-frontend/build/
 
-# Docker/build outputs
-**/out/
-postgres_data/
-storage_data/
+# Database
+data/
+*.db
+*.sqlite
 
-# IDE/editor
+# IDE
 .vs/
 .vscode/
+.idea/
 *.swp
 *.swo
-*.idea/
 
-# System files
+# OS
 .DS_Store
 Thumbs.db
 
-# Local data dumps
-data/
+# Docker
+.dockerignore
 
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+*.tmp
+*.temp
