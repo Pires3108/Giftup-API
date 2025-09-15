@@ -23,9 +23,9 @@ COPY --from=build /app/dist .
 # Default nginx config for SPA with history fallback
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 5173
+EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=3s CMD wget --spider -q http://localhost:5173 || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD wget --spider -q http://localhost:8080 || exit 1
 
 # Run nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]

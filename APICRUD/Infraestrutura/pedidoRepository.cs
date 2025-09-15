@@ -18,12 +18,12 @@ namespace APICRUD.Infraestrutura
             using var connection = _dbConnection.GetConnection();
             using var command = new NpgsqlCommand(@"
                 SELECT p.id, p.cliente_id, p.status_pedido, 
-                       pi.id as pedidoitem_id, pi.pedidoid, pi.itemid, pi.quantidade,
+                       pi.id as pedidoitem_id, pi.pedido_id, pi.item_id, pi.quantidade,
                        i.nome_item, i.preco_item, i.foto_item,
                        c.nome_cliente, c.datanascimento_cliente, c.email_cliente
                 FROM pedidos p
-                LEFT JOIN pedidoitens pi ON p.id = pi.pedidoid
-                LEFT JOIN itens i ON pi.itemid = i.id
+                LEFT JOIN pedido_itens pi ON p.id = pi.pedido_id
+                LEFT JOIN itens i ON pi.item_id = i.id
                 LEFT JOIN clientes c ON p.cliente_id = c.id
                 ORDER BY p.id, pi.id", connection);
             
@@ -50,8 +50,8 @@ namespace APICRUD.Infraestrutura
                     var pedidoItem = new pedidoItem
                     {
                         id = reader.GetInt32(3),
-                        pedidoid = reader.GetInt32(4),
-                        itemid = reader.GetInt32(5),
+                        pedido_id = reader.GetInt32(4),
+                        item_id = reader.GetInt32(5),
                         quantidade = reader.GetInt32(6)
                     };
                     
@@ -75,54 +75,78 @@ namespace APICRUD.Infraestrutura
 
         public List<PedidoDTO> GetByClienteId(int clienteId)
         {
-            using var connection = _dbConnection.GetConnection();
-            using var command = new NpgsqlCommand(@"
-                SELECT p.id, pi.itemid, pi.quantidade, i.nome_item, i.preco_item
-                FROM pedidos p
-                LEFT JOIN pedidoitens pi ON p.id = pi.pedidoid
-                LEFT JOIN itens i ON pi.itemid = i.id
-                WHERE p.cliente_id = @clienteId
-                ORDER BY p.id, pi.id", connection);
-            
-            command.Parameters.AddWithValue("@clienteId", clienteId);
-            using var reader = command.ExecuteReader();
-            
-            var pedidosDict = new Dictionary<int, PedidoDTO>();
-            
-            while (reader.Read())
+            try
             {
-                var pedidoId = reader.GetInt32(0);
+                Console.WriteLine($"Buscando pedidos para cliente ID: {clienteId}");
+                using var connection = _dbConnection.GetConnection();
                 
-                if (!pedidosDict.ContainsKey(pedidoId))
+                // Primeiro, vamos verificar se existem pedidos para este cliente
+                using var checkCommand = new NpgsqlCommand("SELECT COUNT(*) FROM pedidos WHERE cliente_id = @clienteId", connection);
+                checkCommand.Parameters.AddWithValue("@clienteId", clienteId);
+                var pedidoCount = (long)checkCommand.ExecuteScalar();
+                Console.WriteLine($"Total de pedidos encontrados: {pedidoCount}");
+                
+                if (pedidoCount == 0)
                 {
-                    pedidosDict[pedidoId] = new PedidoDTO
-                    {
-                        Id = pedidoId,
-                        Items = new List<PedidoItemResponseDTO>(),
-                        Total = 0
-                    };
+                    Console.WriteLine("Nenhum pedido encontrado para este cliente");
+                    return new List<PedidoDTO>();
                 }
                 
-                if (!reader.IsDBNull(1))
+                using var command = new NpgsqlCommand(@"
+                    SELECT p.id, pi.item_id, pi.quantidade, i.nome_item, i.preco_item
+                    FROM pedidos p
+                    LEFT JOIN pedido_itens pi ON p.id = pi.pedido_id
+                    LEFT JOIN itens i ON pi.item_id = i.id
+                    WHERE p.cliente_id = @clienteId
+                    ORDER BY p.id, pi.id", connection);
+                
+                command.Parameters.AddWithValue("@clienteId", clienteId);
+                using var reader = command.ExecuteReader();
+                
+                var pedidosDict = new Dictionary<int, PedidoDTO>();
+                
+                while (reader.Read())
                 {
-                    var nome = reader.IsDBNull(3) ? "Sem nome" : reader.GetString(3);
-                    var preco = reader.IsDBNull(4) ? 0m : reader.GetDecimal(4);
-                    var quantidade = reader.GetInt32(2);
+                    var pedidoId = reader.GetInt32(0);
                     
-                    var item = new PedidoItemResponseDTO
+                    if (!pedidosDict.ContainsKey(pedidoId))
                     {
-                        Nome = nome,
-                        Preco = preco,
-                        Quantidade = quantidade,
-                        ItemId = reader.GetInt32(1)
-                    };
+                        pedidosDict[pedidoId] = new PedidoDTO
+                        {
+                            Id = pedidoId,
+                            Items = new List<PedidoItemResponseDTO>(),
+                            Total = 0
+                        };
+                    }
                     
-                    pedidosDict[pedidoId].Items.Add(item);
-                    pedidosDict[pedidoId].Total += preco * quantidade;
+                    if (!reader.IsDBNull(1))
+                    {
+                        var nome = reader.IsDBNull(3) ? "Sem nome" : reader.GetString(3);
+                        var preco = reader.IsDBNull(4) ? 0m : reader.GetDecimal(4);
+                        var quantidade = reader.GetInt32(2);
+                        
+                        var item = new PedidoItemResponseDTO
+                        {
+                            Nome = nome,
+                            Preco = preco,
+                            Quantidade = quantidade,
+                            ItemId = reader.GetInt32(1)
+                        };
+                        
+                        pedidosDict[pedidoId].Items.Add(item);
+                        pedidosDict[pedidoId].Total += preco * quantidade;
+                    }
                 }
+                
+                Console.WriteLine($"Encontrados {pedidosDict.Count} pedidos para cliente {clienteId}");
+                return pedidosDict.Values.ToList();
             }
-            
-            return pedidosDict.Values.ToList();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro em GetByClienteId: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                throw;
+            }
         }
 
         public void AddPedido(pedido pedido)
@@ -132,6 +156,20 @@ namespace APICRUD.Infraestrutura
             
             try
             {
+                Console.WriteLine($"Adicionando pedido para cliente {pedido.cliente_id} com {pedido.PedidoItens.Count} itens");
+                
+                // Validar se o cliente existe
+                using var clienteCheckCommand = new NpgsqlCommand("SELECT COUNT(*) FROM clientes WHERE id = @clienteId", connection, transaction);
+                clienteCheckCommand.Parameters.AddWithValue("@clienteId", pedido.cliente_id);
+                var clienteExists = (long)clienteCheckCommand.ExecuteScalar() > 0;
+                
+                if (!clienteExists)
+                {
+                    throw new Exception($"Cliente com ID {pedido.cliente_id} não encontrado");
+                }
+                
+                Console.WriteLine($"Cliente {pedido.cliente_id} existe no banco");
+                
                 using var pedidoCommand = new NpgsqlCommand(
                     "INSERT INTO pedidos (cliente_id, status_pedido) VALUES (@clienteId, @status) RETURNING id",
                     connection, transaction);
@@ -146,20 +184,38 @@ namespace APICRUD.Infraestrutura
                 
                 foreach (var item in pedido.PedidoItens)
                 {
+                    Console.WriteLine($"Adicionando item: pedido_id={pedidoId}, item_id={item.item_id}, quantidade={item.quantidade}");
+                    
+                    // Validar se o item existe
+                    using var itemCheckCommand = new NpgsqlCommand("SELECT COUNT(*) FROM itens WHERE id = @itemId", connection, transaction);
+                    itemCheckCommand.Parameters.AddWithValue("@itemId", item.item_id);
+                    var itemExists = (long)itemCheckCommand.ExecuteScalar() > 0;
+                    
+                    if (!itemExists)
+                    {
+                        throw new Exception($"Item com ID {item.item_id} não encontrado");
+                    }
+                    
+                    // Buscar o preço do item
+                    using var precoCommand = new NpgsqlCommand("SELECT preco_item FROM itens WHERE id = @itemId", connection, transaction);
+                    precoCommand.Parameters.AddWithValue("@itemId", item.item_id);
+                    var preco = (decimal)precoCommand.ExecuteScalar();
+                    
                     using var itemCommand = new NpgsqlCommand(
-                        "INSERT INTO pedidoitens (pedidoid, itemid, quantidade) VALUES (@pedidoid, @itemid, @quantidade)",
+                        "INSERT INTO pedido_itens (pedido_id, item_id, quantidade, preco_unitario) VALUES (@pedido_id, @item_id, @quantidade, @preco_unitario)",
                         connection, transaction);
                     
-                    itemCommand.Parameters.AddWithValue("@pedidoid", pedidoId);
-                    itemCommand.Parameters.AddWithValue("@itemid", item.itemid);
+                    itemCommand.Parameters.AddWithValue("@pedido_id", pedidoId);
+                    itemCommand.Parameters.AddWithValue("@item_id", item.item_id);
                     itemCommand.Parameters.AddWithValue("@quantidade", item.quantidade);
+                    itemCommand.Parameters.AddWithValue("@preco_unitario", preco);
                     
                     itemCommand.ExecuteNonQuery();
-                    Console.WriteLine($"Adicionando item: pedidoid={pedidoId}, itemid={item.itemid}, quantidade={item.quantidade}");
+                    Console.WriteLine($"Item adicionado com sucesso");
                 }
                 
                 transaction.Commit();
-                Console.WriteLine("Itens salvos com sucesso!");
+                Console.WriteLine("Pedido e itens salvos com sucesso!");
             }
             catch (Exception ex)
             {
@@ -189,7 +245,7 @@ namespace APICRUD.Infraestrutura
                     throw new Exception("Pedido não encontrado ou não pertence ao cliente.");
 
                 using var deleteItemsCommand = new NpgsqlCommand(
-                    "DELETE FROM pedidoitens WHERE pedidoid = @pedidoId",
+                    "DELETE FROM pedido_itens WHERE pedido_id = @pedidoId",
                     connection, transaction);
                 
                 deleteItemsCommand.Parameters.AddWithValue("@pedidoId", pedidoId);
@@ -229,7 +285,7 @@ namespace APICRUD.Infraestrutura
                     throw new Exception("Pedido não encontrado.");
 
                 using var deleteItemsCommand = new NpgsqlCommand(
-                    "DELETE FROM pedidoitens WHERE pedidoid = @pedidoId",
+                    "DELETE FROM pedido_itens WHERE pedido_id = @pedidoId",
                     connection, transaction);
                 
                 deleteItemsCommand.Parameters.AddWithValue("@pedidoId", pedidoId);
@@ -277,7 +333,7 @@ namespace APICRUD.Infraestrutura
                 updatePedidoCommand.ExecuteNonQuery();
 
                 using var deleteItemsCommand = new NpgsqlCommand(
-                    "DELETE FROM pedidoitens WHERE pedidoid = @pedidoId",
+                    "DELETE FROM pedido_itens WHERE pedido_id = @pedidoId",
                     connection, transaction);
                 
                 deleteItemsCommand.Parameters.AddWithValue("@pedidoId", id);
@@ -285,13 +341,19 @@ namespace APICRUD.Infraestrutura
 
                 foreach (var item in itens)
                 {
+                    // Buscar o preço do item
+                    using var precoCommand = new NpgsqlCommand("SELECT preco_item FROM itens WHERE id = @itemId", connection, transaction);
+                    precoCommand.Parameters.AddWithValue("@itemId", item.item_id);
+                    var preco = (decimal)precoCommand.ExecuteScalar();
+                    
                     using var insertItemCommand = new NpgsqlCommand(
-                        "INSERT INTO pedidoitens (pedidoid, itemid, quantidade) VALUES (@pedidoid, @itemid, @quantidade)",
+                        "INSERT INTO pedido_itens (pedido_id, item_id, quantidade, preco_unitario) VALUES (@pedido_id, @item_id, @quantidade, @preco_unitario)",
                         connection, transaction);
                     
-                    insertItemCommand.Parameters.AddWithValue("@pedidoid", id);
-                    insertItemCommand.Parameters.AddWithValue("@itemid", item.item_id);
+                    insertItemCommand.Parameters.AddWithValue("@pedido_id", id);
+                    insertItemCommand.Parameters.AddWithValue("@item_id", item.item_id);
                     insertItemCommand.Parameters.AddWithValue("@quantidade", item.quantidade);
+                    insertItemCommand.Parameters.AddWithValue("@preco_unitario", preco);
                     insertItemCommand.ExecuteNonQuery();
                 }
 

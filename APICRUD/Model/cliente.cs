@@ -21,7 +21,7 @@ namespace APICRUD.Model
             this.nome_cliente = nome_cliente;
             this.datanascimento_cliente = dataNascimento_cliente;
             this.email_cliente = email_cliente;
-            this.senha = senha;
+            this.senha = senha; // Senha já vem hashed do controller
         }
 
 

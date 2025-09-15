@@ -14,22 +14,31 @@ namespace APICRUD.Infraestrutura
 
         public List<item> Get()
         {
-            using var connection = _dbConnection.GetConnection();
-            using var command = new NpgsqlCommand("SELECT id, nome_item, preco_item, foto_item FROM itens", connection);
-            using var reader = command.ExecuteReader();
-            
-            var itens = new List<item>();
-            while (reader.Read())
+            try
             {
-                itens.Add(new item
+                using var connection = _dbConnection.GetConnection();
+                using var command = new NpgsqlCommand("SELECT id, nome_item, preco_item, foto_item FROM itens", connection);
+                using var reader = command.ExecuteReader();
+                
+                var itens = new List<item>();
+                while (reader.Read())
                 {
-                    id = reader.GetInt32(0),
-                    nome_item = reader.GetString(1),
-                    preco_item = reader.GetDecimal(2),
-                    foto_item = reader.GetString(3)
-                });
+                    itens.Add(new item
+                    {
+                        id = reader.GetInt32(0),
+                        nome_item = reader.GetString(1),
+                        preco_item = reader.GetDecimal(2),
+                        foto_item = reader.GetString(3)
+                    });
+                }
+                return itens;
             }
-            return itens;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao buscar itens: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                throw new Exception($"Erro ao conectar com o banco de dados: {ex.Message}", ex);
+            }
         }
 
         public void AddItem(item item)

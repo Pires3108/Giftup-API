@@ -12,10 +12,25 @@ export default function Itens() {
   const fetchItens = async () => {
     try {
       setCarregando(true);
+      console.log("Iniciando busca de itens...");
       const response = await api.get("/item");
-      setItens(response.data);
+      console.log("Resposta da API:", response.data);
+      console.log("Status da resposta:", response.status);
+      
+      // Verificar se a resposta é um array
+      if (Array.isArray(response.data)) {
+        setItens(response.data);
+        console.log("Itens carregados com sucesso:", response.data.length);
+      } else {
+        console.error("Resposta não é um array:", response.data);
+        setItens([]);
+        setMensagem("Erro: Formato de dados inválido da API.");
+        setTimeout(() => setMensagem(""), 5000);
+      }
     } catch (error) {
       console.error("Erro ao buscar itens:", error);
+      console.error("Detalhes do erro:", error.response?.data);
+      setItens([]);
       setMensagem("Erro ao carregar itens. Verifique se o backend está rodando.");
       setTimeout(() => setMensagem(""), 5000);
     } finally {
@@ -176,9 +191,26 @@ export default function Itens() {
             alt={item.nome_item}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
             onError={(e) => {
-              e.target.src = "https://via.placeholder.com/200x150?text=Sem+Imagem";
+              e.target.style.display = "none";
+              e.target.nextSibling.style.display = "flex";
             }}
           />
+          <div style={{
+            display: "none",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#f0f0f0",
+            color: "#999",
+            fontSize: "14px",
+            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            top: 0,
+            left: 0
+          }}>
+            Sem imagem
+          </div>
           {editando === item.id && (
             <input
               type="file"

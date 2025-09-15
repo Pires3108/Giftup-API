@@ -85,7 +85,12 @@ builder.Services.AddCors(options =>
     
     options.AddPolicy("Production", policy =>
     {
-        policy.WithOrigins("https://yourdomain.com")
+        policy.WithOrigins(
+                "https://giftup-frontend-us-central1-project-4ff72848-5923-4058-b7a.a.run.app",
+                "https://giftup-api-us-central1-project-4ff72848-5923-4058-b7a.a.run.app",
+                "https://giftup-frontend-12260072068.us-central1.run.app",
+                "https://giftup-api-12260072068.us-central1.run.app"
+              )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -123,7 +128,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "APICRUD API v1");
-    c.RoutePrefix = string.Empty;
+    c.RoutePrefix = "swagger";
 });
 
 if (app.Environment.IsProduction())
@@ -141,7 +146,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseCors("AllowFrontend");
+    app.UseCors("Production");
 }
 
 

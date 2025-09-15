@@ -12,9 +12,19 @@ export default function Home() {
     setError("");
     try {
       const res = await api.get("/item");
-      setProducts(res.data);
+      console.log("Resposta da API (Home):", res.data);
+      
+      // Verificar se a resposta é um array
+      if (Array.isArray(res.data)) {
+        setProducts(res.data);
+      } else {
+        console.error("Resposta não é um array:", res.data);
+        setProducts([]);
+        setError("Erro: Formato de dados inválido da API.");
+      }
     } catch (err) {
       console.error(err);
+      setProducts([]);
       setError("Não foi possível carregar os produtos.");
     } finally {
       setLoading(false);

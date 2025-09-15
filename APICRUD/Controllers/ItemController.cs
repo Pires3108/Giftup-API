@@ -3,22 +3,26 @@ using APICRUD.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using APICRUD.Extensions;
 using Microsoft.AspNetCore.Cors;
+using Npgsql;
+using APICRUD.Infraestrutura;
 
 namespace APICRUD.Controllers
 {
     [ApiController]
     [Route("api/v1/item")]
-    [EnableCors("AllowFrontend")]
+    [EnableCors("Production")]
     public class ItemController : ControllerBase
     {
         private readonly IitemRepository _itemRepository;
-        public ItemController(IitemRepository itemRepository)
+        private readonly DatabaseConnection _dbConnection;
+        public ItemController(IitemRepository itemRepository, DatabaseConnection dbConnection)
         {
             _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
+            _dbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
         }
 
         [HttpPost]
-        [EnableCors("AllowFrontend")]
+        [EnableCors("Production")]
         public IActionResult Add([FromForm] itemViewModel itemViewModel)
         {
             var fileName = $"{Guid.NewGuid()}_{itemViewModel.foto_item.FileName}";
@@ -36,7 +40,7 @@ namespace APICRUD.Controllers
         }
 
        [HttpPut("{id}")]
-       [EnableCors("AllowFrontend")]
+       [EnableCors("Production")]
 public IActionResult Update(int id, [FromForm] itemViewModel itemViewModel)
 {
     var itemExistente = _itemRepository.GetItem(id);
@@ -77,8 +81,36 @@ public IActionResult Update(int id, [FromForm] itemViewModel itemViewModel)
         
 
         [HttpGet]
+        [EnableCors("Production")]
+        public IActionResult Get()
+        {
+            try
+            {
+                var itens = _itemRepository.Get();
+                return Ok(itens);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro no ItemController.Get: {ex.Message}");
+                return StatusCode(500, new { message = "Erro interno do servidor", details = ex.Message });
+            }
+        }
+
+        [HttpGet("{id}")]
+        [EnableCors("Production")]
+        public IActionResult GetById(int id)
+        {
+            var item = _itemRepository.GetItem(id);
+            if (item == null)
+            {
+                return NotFound("Item not found.");
+            }
+            return Ok(item);
+        }
+
+        [HttpGet]
         [Route("{id}/download")]
-        [EnableCors("AllowFrontend")]
+        [EnableCors("Production")]
         public IActionResult DownloadFoto(int id)
         {
             var item = _itemRepository.GetItem(id);
@@ -91,17 +123,8 @@ public IActionResult Update(int id, [FromForm] itemViewModel itemViewModel)
             return File(fileBytes, "image/png");
         }
 
-
-        [HttpGet]
-        [EnableCors("AllowFrontend")]
-        public IActionResult Get()
-        {
-            var itens = _itemRepository.Get();
-            return Ok(itens);
-        }
-
         [HttpDelete("{id}")]
-        [EnableCors("AllowFrontend")]
+        [EnableCors("Production")]
         public IActionResult Delete(int id)
         {
             var itemToDelete = new item
@@ -111,5 +134,6 @@ public IActionResult Update(int id, [FromForm] itemViewModel itemViewModel)
             _itemRepository.DeleteItem(itemToDelete);
             return Ok();
         }
+
     }
 }

@@ -21,7 +21,7 @@ export default function ProductCard({ product }) {
       setImageUrl(imageUrl);
     } catch (error) {
       console.error('Erro ao carregar imagem:', error);
-      setImageUrl('https://via.placeholder.com/150x150?text=Sem+Imagem');
+      setImageUrl(null);
     } finally {
       setLoadingImage(false);
     }
@@ -37,10 +37,14 @@ export default function ProductCard({ product }) {
         URL.revokeObjectURL(imageUrl);
       }
     };
-  }, [fetchImage, imageUrl, product.id]);
+  }, [fetchImage, product.id]);
 
   async function handleAddToCart() {
+    console.log("=== INÍCIO handleAddToCart ===");
+    console.log("Product:", product);
+    
     if (!isLoggedIn()) {
+      console.log("Usuário não está logado");
       setMensagem("🔒 Faça login para adicionar ao carrinho");
       setCorMensagem("red");
       setTimeout(() => {
@@ -53,8 +57,12 @@ export default function ProductCard({ product }) {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token não encontrado");
       
+      console.log("Token encontrado:", token.substring(0, 20) + "...");
+      
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const clienteId = payload.id;
+      const clienteId = payload.id || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      
+      console.log("Cliente ID extraído:", clienteId);
 
       const novoPedido = {
         cliente_id: clienteId,
@@ -66,7 +74,10 @@ export default function ProductCard({ product }) {
         ]
       };
 
-      await api.post("/pedido", novoPedido);
+      console.log("Enviando pedido:", novoPedido);
+      
+      const response = await api.post("/pedido", novoPedido);
+      console.log("Resposta da API:", response);
 
       setMensagem("✅ Item adicionado ao carrinho!");
       setCorMensagem("green");
@@ -74,13 +85,26 @@ export default function ProductCard({ product }) {
         setMensagem("");
       }, 3000);
 
-    } catch {
-      setMensagem("❌ Erro ao adicionar item no carrinho!");
+    } catch (error) {
+      console.error("Erro ao adicionar ao carrinho:", error);
+      console.error("Detalhes do erro:", error.response?.data);
+      console.error("Status do erro:", error.response?.status);
+      
+      let errorMessage = "Erro desconhecido";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setMensagem(`❌ Erro ao adicionar item no carrinho: ${errorMessage}`);
       setCorMensagem("red");
       setTimeout(() => {
         setMensagem("");
       }, 3000);
     }
+    
+    console.log("=== FIM handleAddToCart ===");
   };
 
   return (
@@ -102,7 +126,7 @@ export default function ProductCard({ product }) {
           <div style={{ color: "#666" }}>
             Carregando imagem...
           </div>
-        ) : (
+        ) : imageUrl ? (
           <img
             src={imageUrl}
             alt={product.nome_item}
@@ -112,6 +136,18 @@ export default function ProductCard({ product }) {
               objectFit: "cover"
             }}
           />
+        ) : (
+          <div style={{ 
+            color: "#999", 
+            fontSize: "14px",
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%"
+          }}>
+            Sem imagem
+          </div>
         )}
       </div>
       <div style={{

@@ -14,18 +14,16 @@ namespace APICRUD.Infraestrutura
 
         public void AddCliente(cliente cliente)
         {
-            cliente.senha = BCrypt.Net.BCrypt.HashPassword(cliente.senha);
-
+            // Don't hash here - it's already hashed in the controller
             using var connection = _dbConnection.GetConnection();
             using var command = new NpgsqlCommand(
-                "INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha, islogged) VALUES (@nome, @dataNascimento, @email, @senha, @islogged) RETURNING id",
+                "INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha) VALUES (@nome, @dataNascimento, @email, @senha) RETURNING id",
                 connection);
             
             command.Parameters.AddWithValue("@nome", cliente.nome_cliente);
             command.Parameters.AddWithValue("@dataNascimento", cliente.datanascimento_cliente);
             command.Parameters.AddWithValue("@email", cliente.email_cliente);
             command.Parameters.AddWithValue("@senha", cliente.senha);
-            command.Parameters.AddWithValue("@islogged", false);
             
             cliente.id = (int)command.ExecuteScalar()!;
         }
@@ -64,7 +62,7 @@ namespace APICRUD.Infraestrutura
             try
             {
                 using var deletePedidoItensCommand = new NpgsqlCommand(
-                    "DELETE FROM pedidoitens WHERE pedidoid IN (SELECT id FROM pedidos WHERE cliente_id = @id)", 
+                    "DELETE FROM pedido_itens WHERE pedido_id IN (SELECT id FROM pedidos WHERE cliente_id = @id)", 
                     connection, transaction);
                 deletePedidoItensCommand.Parameters.AddWithValue("@id", id);
                 deletePedidoItensCommand.ExecuteNonQuery();
@@ -142,20 +140,26 @@ namespace APICRUD.Infraestrutura
 
         public async Task<cliente> AddclienteAsync(cliente cliente)
         {
-            cliente.senha = BCrypt.Net.BCrypt.HashPassword(cliente.senha);
-
+            // Don't hash here - it's already hashed in the controller
+            Console.WriteLine($"=== REPOSITORY DEBUG ===");
+            Console.WriteLine($"Email: {cliente.email_cliente}");
+            Console.WriteLine($"Senha recebida: {cliente.senha}");
+            Console.WriteLine($"Tamanho da senha: {cliente.senha?.Length ?? 0}");
+            
             using var connection = await _dbConnection.GetConnectionAsync();
             using var command = new NpgsqlCommand(
-                "INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha, islogged) VALUES (@nome, @dataNascimento, @email, @senha, @islogged) RETURNING id",
+                "INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha) VALUES (@nome, @dataNascimento, @email, @senha) RETURNING id",
                 connection);
             
             command.Parameters.AddWithValue("@nome", cliente.nome_cliente);
             command.Parameters.AddWithValue("@dataNascimento", cliente.datanascimento_cliente);
             command.Parameters.AddWithValue("@email", cliente.email_cliente);
             command.Parameters.AddWithValue("@senha", cliente.senha);
-            command.Parameters.AddWithValue("@islogged", false);
+            
+            Console.WriteLine($"Parâmetro senha: {command.Parameters["@senha"].Value}");
             
             cliente.id = (int)await command.ExecuteScalarAsync();
+            Console.WriteLine($"Cliente inserido com ID: {cliente.id}");
             return cliente;
         }
 

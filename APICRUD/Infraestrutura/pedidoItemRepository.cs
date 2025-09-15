@@ -16,11 +16,11 @@ namespace APICRUD.Infraestrutura
         {
             using var connection = _dbConnection.GetConnection();
             using var command = new NpgsqlCommand(
-                "INSERT INTO pedidoitens (pedidoid, itemid, quantidade) VALUES (@pedidoid, @itemid, @quantidade) RETURNING id",
+                "INSERT INTO pedido_itens (pedido_id, item_id, quantidade) VALUES (@pedido_id, @item_id, @quantidade) RETURNING id",
                 connection);
             
-            command.Parameters.AddWithValue("@pedidoid", pedidoItem.pedidoid);
-            command.Parameters.AddWithValue("@itemid", pedidoItem.itemid);
+            command.Parameters.AddWithValue("@pedido_id", pedidoItem.pedido_id);
+            command.Parameters.AddWithValue("@item_id", pedidoItem.item_id);
             command.Parameters.AddWithValue("@quantidade", pedidoItem.quantidade);
             
             pedidoItem.id = (int)command.ExecuteScalar()!;
@@ -29,7 +29,7 @@ namespace APICRUD.Infraestrutura
         public List<pedidoItem> Get()
         {
             using var connection = _dbConnection.GetConnection();
-            using var command = new NpgsqlCommand("SELECT id, pedidoid, itemid, quantidade FROM pedidoitens", connection);
+            using var command = new NpgsqlCommand("SELECT id, pedido_id, item_id, quantidade FROM pedido_itens", connection);
             using var reader = command.ExecuteReader();
             
             var pedidoItens = new List<pedidoItem>();
@@ -38,8 +38,8 @@ namespace APICRUD.Infraestrutura
                 pedidoItens.Add(new pedidoItem
                 {
                     id = reader.GetInt32(0),
-                    pedidoid = reader.GetInt32(1),
-                    itemid = reader.GetInt32(2),
+                    pedido_id = reader.GetInt32(1),
+                    item_id = reader.GetInt32(2),
                     quantidade = reader.GetInt32(3)
                 });
             }

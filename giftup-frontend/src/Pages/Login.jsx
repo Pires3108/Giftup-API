@@ -11,12 +11,20 @@ export default function Login({ goToRegister, goToHome, setLogado, onLoginSucces
 
   async function loginCliente() {
     try {
+      console.log("=== INÍCIO LOGIN ===");
+      
       const novoLogin = {
-        Email: inputEmail.current.value,
-        Senha: inputSenha.current.value,
+        email_cliente: inputEmail.current.value,
+        senha: inputSenha.current.value,
       };
+      
+      console.log("Dados do login:", novoLogin);
+      console.log("URL da API:", api.defaults.baseURL);
   
       const response = await api.post('/cliente/login', novoLogin);
+      
+      console.log("Resposta da API:", response);
+      console.log("Token recebido:", response.data.token);
   
       localStorage.setItem('token', response.data.token);
       setMensagem("✅ Login feito com sucesso!");
@@ -34,15 +42,30 @@ export default function Login({ goToRegister, goToHome, setLogado, onLoginSucces
   
       inputEmail.current.value = "";
       inputSenha.current.value = "";
+      
+      console.log("=== FIM LOGIN SUCESSO ===");
     } catch (error) {
-      setMensagem("❌ Email ou senha invalidos!");
+      console.error("=== ERRO NO LOGIN ===");
+      console.error("Erro completo:", error);
+      console.error("Status do erro:", error.response?.status);
+      console.error("Dados do erro:", error.response?.data);
+      console.error("Mensagem do erro:", error.message);
+      
+      let errorMessage = "❌ Email ou senha inválidos!";
+      
+      if (error.response?.data?.message) {
+        errorMessage = `❌ ${error.response.data.message}`;
+      } else if (error.response?.data?.errors) {
+        const errors = error.response.data.errors;
+        const errorKeys = Object.keys(errors);
+        if (errorKeys.length > 0) {
+          errorMessage = `❌ ${errors[errorKeys[0]][0]}`;
+        }
+      }
+      
+      setMensagem(errorMessage);
       setCorMensagem("red");
-      setTimeout(() => setMensagem(""), 1000);
-  
-      console.error(
-        "Erro ao fazer login:",
-        error.response?.data || error.message
-      );
+      setTimeout(() => setMensagem(""), 3000);
     }
   }
 
