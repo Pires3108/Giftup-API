@@ -89,29 +89,52 @@ export default function Login({ goToRegister, goToHome, setLogado, onLoginSucces
       >
         Seja Bem Vindo de Volta
       </h2>
-      <input
-        ref={inputEmail}
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          padding: "8px",
-          marginBottom: "10px",
-          width: "256px"
-        }}
-        placeholder="Email:"
-      />
-      <input
-        type="password"
-        ref={inputSenha}
-        style={{
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-          padding: "8px",
-          marginBottom: "10px",
-          width: "256px"
-        }}
-        placeholder="Senha:"
-      />
+      <div style={{ width: "256px", marginBottom: "10px" }}>
+        <label style={{
+          display: "block",
+          marginBottom: "4px",
+          fontSize: "14px",
+          color: "#666",
+          fontWeight: "500"
+        }}>
+          Email
+        </label>
+        <input
+          ref={inputEmail}
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            padding: "8px",
+            width: "100%",
+            boxSizing: "border-box"
+          }}
+          placeholder="Ex: joao@email.com"
+        />
+      </div>
+      
+      <div style={{ width: "256px", marginBottom: "10px" }}>
+        <label style={{
+          display: "block",
+          marginBottom: "4px",
+          fontSize: "14px",
+          color: "#666",
+          fontWeight: "500"
+        }}>
+          Senha
+        </label>
+        <input
+          type="password"
+          ref={inputSenha}
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            padding: "8px",
+            width: "100%",
+            boxSizing: "border-box"
+          }}
+          placeholder="Ex: MinhaSenh@123"
+        />
+      </div>
       <h3
         style={{
           color: "blue",

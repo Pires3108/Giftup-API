@@ -118,7 +118,7 @@ export default function GiftUpApp() {
         <div
           ref={menuRef}
           style={{
-            position: "absolute",
+            position: "fixed",
             top: 0,
             left: 0,
             width: "200px",
@@ -126,6 +126,7 @@ export default function GiftUpApp() {
             background: "#666",
             padding: "10px",
             zIndex: 50,
+            overflowY: "auto",
           }}
         >
           <p
