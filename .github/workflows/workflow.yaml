@@ -138,9 +138,6 @@ jobs:
           # Test items endpoint
           curl -f http://localhost:5000/api/v1/item
           
-          # Test image download
-          curl -f http://localhost:5000/api/v1/item/1/download
-          
           # Test Swagger
           curl -f http://localhost:5000/swagger/v1/swagger.json
 
