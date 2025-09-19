@@ -38,7 +38,3 @@ INSERT INTO itens (nome_item, preco_item, foto_item) VALUES
 ('Porta Retrato', 15.50, 'PortaRetrato_imagem.jpg'),
 ('Kit Caneta', 12.00, '4a366c08-9f2e-47d4-86ba-8befaf42ab05_KitCanetetaImagem.png')
 ON CONFLICT DO NOTHING;
-
-INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha) VALUES 
-('João Silva', '1990-05-15', 'joao@email.com', '$2a$11$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy')
-ON CONFLICT (email_cliente) DO NOTHING;
