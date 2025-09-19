@@ -8,7 +8,7 @@
 
 ## 📋 Sobre o Projeto
 
-O **GiftUp** é uma aplicação completa de e-commerce desenvolvida para aprendizado seguindo as orientações de um desafio em duas partes (até 17/09), oferecendo uma plataforma para venda de produtos de presentes. O sistema é composto por uma API RESTful em .NET 8 e um frontend em React. Projeto ainda em desenvolvimento.
+O **GiftUp** é uma aplicação completa de e-commerce desenvolvida para aprendizado seguindo as orientações de um desafio em duas partes (até 17/09), oferecendo uma plataforma para venda de produtos de presentes. O sistema é composto por uma API RESTful em .NET 8 e um frontend em React. Projeto ainda está em desenvolvimento.
 
 Parte 1:
 
