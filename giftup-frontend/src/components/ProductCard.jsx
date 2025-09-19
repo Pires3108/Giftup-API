@@ -37,7 +37,7 @@ export default function ProductCard({ product }) {
         URL.revokeObjectURL(imageUrl);
       }
     };
-  }, [fetchImage, product.id]);
+  }, [fetchImage, product.id, imageUrl]);
 
   async function handleAddToCart() {
     if (!isLoggedIn()) {
@@ -66,7 +66,7 @@ export default function ProductCard({ product }) {
         ]
       };
       
-      const response = await api.post("/pedido", novoPedido);
+      await api.post("/pedido", novoPedido);
 
       setMensagem("✅ Item adicionado ao carrinho!");
       setCorMensagem("green");
