@@ -1,20 +1,56 @@
-# Solution-level ignores
-**/bin
-**/obj
-**/.vs
-**/.vscode
-**/node_modules
-**/npm-debug.log
-**/yarn.lock
-**/package-lock.json
-**/.DS_Store
-
-# Local database and artifacts are mounted, not built
-data
-APICRUD/APICRUD/Storage
-
 # Git
 .git
 .gitignore
+README.md
 
+# Docker
+Dockerfile*
+docker-compose*
 
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+node_modules/
+
+# Build outputs
+dist/
+build/
+bin/
+obj/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database
+data/
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/

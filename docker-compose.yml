@@ -1,0 +1,53 @@
+services:
+  backend:
+    build:
+      context: ./APICRUD
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=crud
+      - DB_USER=nicolas
+      - DB_PASSWORD=SuaSenhaSegura
+      - JWT__Key=Zk4sJf8wQ2uN9rX1vB7pE3aT6mC0yH5dR2oL8uK1nF4xS7tM9vP3qW6zY0bD2hJ
+      - JWT__Issuer=MinhaAPI
+      - JWT__Audience=MinhaAPIUsers
+      - JWT__ExpiresInMinutes=60
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./giftup-frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:5000
+    ports:
+      - "5173:8080"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: crud
+      POSTGRES_USER: nicolas
+      POSTGRES_PASSWORD: SuaSenhaSegura
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nicolas -d crud"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_data:
