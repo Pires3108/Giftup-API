@@ -34,20 +34,12 @@ namespace APICRUD.Controllers
                 }
 
                 var hashedPassword = BCrypt.Net.BCrypt.HashPassword(clientesView.senha);
-                Console.WriteLine($"=== REGISTRATION DEBUG ===");
-                Console.WriteLine($"email_cliente: {clientesView.email_cliente}");
-                Console.WriteLine($"senha original: {clientesView.senha}");
-                Console.WriteLine($"senha hasheada: {hashedPassword}");
-                Console.WriteLine($"Tamanho do hash: {hashedPassword?.Length ?? 0}");
                 
                 var cliente = new cliente(
                     clientesView.nome_cliente,
                     clientesView.datanascimento_cliente,
                     clientesView.email_cliente,
                     hashedPassword);
-                
-                Console.WriteLine($"Cliente criado com senha: {cliente.senha}");
-                Console.WriteLine($"Tamanho da senha no cliente: {cliente.senha?.Length ?? 0}");
 
                 await _clientesRepository.AddclienteAsync(cliente);
                 return Ok();
@@ -161,41 +153,20 @@ namespace APICRUD.Controllers
         {
             try
             {
-                Console.WriteLine($"=== LOGIN DEBUG ===");
-                Console.WriteLine($"email_cliente recebido: '{dto.email_cliente}'");
-                Console.WriteLine($"senha recebida: '{dto.senha}'");
-                
                 var cliente = await _clientesRepository.GetByEmail(dto.email_cliente);
                 if (cliente == null)
                 {
-                    Console.WriteLine($"Cliente não encontrado para email: {dto.email_cliente}");
                     return Unauthorized(new { mensagem = "Credenciais invalidas" });
                 }
 
-                Console.WriteLine($"Cliente encontrado: {cliente.nome_cliente}");
-                Console.WriteLine($"email_cliente do cliente: '{cliente.email_cliente}'");
-                Console.WriteLine($"Hash da senha no banco: {cliente.senha}");
-                Console.WriteLine($"Tamanho do hash: {cliente.senha?.Length ?? 0}");
-                Console.WriteLine($"senha fornecida: '{dto.senha}'");
-                Console.WriteLine($"Tamanho da senha fornecida: {dto.senha?.Length ?? 0}");
-
-                // Teste de verificação de senha
-                var testHash = BCrypt.Net.BCrypt.HashPassword(dto.senha);
-                Console.WriteLine($"Hash de teste gerado: {testHash}");
-                var testVerify = BCrypt.Net.BCrypt.Verify(dto.senha, testHash);
-                Console.WriteLine($"Teste de verificação com hash novo: {testVerify}");
-
                 var senhaValida = BCrypt.Net.BCrypt.Verify(dto.senha, cliente.senha);
-                Console.WriteLine($"Verificação da senha real: {senhaValida}");
                 
                 if (!senhaValida)
                 {
-                    Console.WriteLine("Verificação de senha falhou");
                     return Unauthorized(new { mensagem = "Credenciais invalidas" });
                 }
 
                 var token = _tokenService.GenerateToken(cliente);
-                Console.WriteLine("Login bem-sucedido!");
 
                 return Ok(new
                 {
@@ -206,8 +177,6 @@ namespace APICRUD.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro no login: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return StatusCode(500, new { mensagem = "Erro interno do servidor", erro = ex.Message });
             }
         }

@@ -140,12 +140,6 @@ namespace APICRUD.Infraestrutura
 
         public async Task<cliente> AddclienteAsync(cliente cliente)
         {
-            // Don't hash here - it's already hashed in the controller
-            Console.WriteLine($"=== REPOSITORY DEBUG ===");
-            Console.WriteLine($"Email: {cliente.email_cliente}");
-            Console.WriteLine($"Senha recebida: {cliente.senha}");
-            Console.WriteLine($"Tamanho da senha: {cliente.senha?.Length ?? 0}");
-            
             using var connection = await _dbConnection.GetConnectionAsync();
             using var command = new NpgsqlCommand(
                 "INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha) VALUES (@nome, @dataNascimento, @email, @senha) RETURNING id",
@@ -156,10 +150,7 @@ namespace APICRUD.Infraestrutura
             command.Parameters.AddWithValue("@email", cliente.email_cliente);
             command.Parameters.AddWithValue("@senha", cliente.senha);
             
-            Console.WriteLine($"Parâmetro senha: {command.Parameters["@senha"].Value}");
-            
             cliente.id = (int)await command.ExecuteScalarAsync();
-            Console.WriteLine($"Cliente inserido com ID: {cliente.id}");
             return cliente;
         }
 

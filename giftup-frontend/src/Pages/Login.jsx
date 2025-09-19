@@ -11,20 +11,12 @@ export default function Login({ goToRegister, goToHome, setLogado, onLoginSucces
 
   async function loginCliente() {
     try {
-      console.log("=== INÍCIO LOGIN ===");
-      
       const novoLogin = {
         email_cliente: inputEmail.current.value,
         senha: inputSenha.current.value,
       };
-      
-      console.log("Dados do login:", novoLogin);
-      console.log("URL da API:", api.defaults.baseURL);
   
       const response = await api.post('/cliente/login', novoLogin);
-      
-      console.log("Resposta da API:", response);
-      console.log("Token recebido:", response.data.token);
   
       localStorage.setItem('token', response.data.token);
       setMensagem("✅ Login feito com sucesso!");
@@ -43,14 +35,7 @@ export default function Login({ goToRegister, goToHome, setLogado, onLoginSucces
       inputEmail.current.value = "";
       inputSenha.current.value = "";
       
-      console.log("=== FIM LOGIN SUCESSO ===");
     } catch (error) {
-      console.error("=== ERRO NO LOGIN ===");
-      console.error("Erro completo:", error);
-      console.error("Status do erro:", error.response?.status);
-      console.error("Dados do erro:", error.response?.data);
-      console.error("Mensagem do erro:", error.message);
-      
       let errorMessage = "❌ Email ou senha inválidos!";
       
       if (error.response?.data?.message) {

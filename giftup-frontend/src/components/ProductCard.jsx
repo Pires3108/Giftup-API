@@ -40,11 +40,7 @@ export default function ProductCard({ product }) {
   }, [fetchImage, product.id]);
 
   async function handleAddToCart() {
-    console.log("=== INÍCIO handleAddToCart ===");
-    console.log("Product:", product);
-    
     if (!isLoggedIn()) {
-      console.log("Usuário não está logado");
       setMensagem("🔒 Faça login para adicionar ao carrinho");
       setCorMensagem("red");
       setTimeout(() => {
@@ -57,12 +53,8 @@ export default function ProductCard({ product }) {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token não encontrado");
       
-      console.log("Token encontrado:", token.substring(0, 20) + "...");
-      
       const payload = JSON.parse(atob(token.split('.')[1]));
       const clienteId = payload.id || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-      
-      console.log("Cliente ID extraído:", clienteId);
 
       const novoPedido = {
         cliente_id: clienteId,
@@ -73,11 +65,8 @@ export default function ProductCard({ product }) {
           }
         ]
       };
-
-      console.log("Enviando pedido:", novoPedido);
       
       const response = await api.post("/pedido", novoPedido);
-      console.log("Resposta da API:", response);
 
       setMensagem("✅ Item adicionado ao carrinho!");
       setCorMensagem("green");
@@ -86,10 +75,6 @@ export default function ProductCard({ product }) {
       }, 3000);
 
     } catch (error) {
-      console.error("Erro ao adicionar ao carrinho:", error);
-      console.error("Detalhes do erro:", error.response?.data);
-      console.error("Status do erro:", error.response?.status);
-      
       let errorMessage = "Erro desconhecido";
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
@@ -103,8 +88,6 @@ export default function ProductCard({ product }) {
         setMensagem("");
       }, 3000);
     }
-    
-    console.log("=== FIM handleAddToCart ===");
   };
 
   return (

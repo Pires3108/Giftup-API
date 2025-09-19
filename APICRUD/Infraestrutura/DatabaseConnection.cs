@@ -10,8 +10,14 @@ namespace APICRUD.Infraestrutura
 
         public DatabaseConnection(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection") 
-                ?? throw new ArgumentNullException("Connection string not found");
+            // Tenta ler das variáveis de ambiente primeiro
+            var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "34.134.158.190";
+            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
+            var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "crud";
+            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "nicolas";
+            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "SuaSenhaSegura";
+            
+            _connectionString = $"Host={dbHost};Port={dbPort};Database={dbName};Username={dbUser};Password={dbPassword}";
         }
 
         public NpgsqlConnection GetConnection()
