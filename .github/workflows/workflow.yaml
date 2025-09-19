@@ -123,6 +123,11 @@ jobs:
           docker compose up -d --build
           sleep 30
 
+      - name: Create database tables
+        run: |
+          docker cp create-tables-now.sql giftup-api-postgres-1:/tmp/create-tables-now.sql
+          docker compose exec postgres psql -U nicolas -d crud -f /tmp/create-tables-now.sql
+
       - name: Wait for services to be ready
         run: |
           timeout 60 bash -c 'until curl -f http://localhost:5000/health; do sleep 2; done'
