@@ -12,11 +12,11 @@ O **GiftUp** é uma aplicação completa de e-commerce desenvolvida para aprendi
 
 Parte 1:
 
-![LousaDesafioParteUm](READMEImages\ImagemLousaParteUm.jpeg)
+![LousaDesafioParteUm](READMEImages/ImagemLousaParteUm.jpeg)
 
 Parte 2:
 
-![LousaDesafioParteUm](READMEImages\ImagemLousaParteDois.jpeg)
+![LousaDesafioParteUm](READMEImages/ImagemLousaParteDois.jpeg)
 
 ## Documentos Parte 1:
 
@@ -24,7 +24,7 @@ Parte 2:
 
     [DER GiftUp](https://lucid.app/lucidchart/a03c70d2-d515-4af4-9074-fc511bf5d1e8/edit?invitationId=inv_2b6ebada-9857-4f41-b3bd-aa3fd288765f&page=0_0#)
 
-    ![FotoDER](READMEImages\DER_GiftUp.png)
+    ![FotoDER](READMEImages/DER_GiftUp.png)
 
 - Prototipação das telas no Figma:
 
