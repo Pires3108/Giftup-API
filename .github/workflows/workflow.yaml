@@ -125,8 +125,8 @@ jobs:
 
       - name: Create database tables
         run: |
-          docker cp create-tables-now.sql $(docker compose ps -q postgres):/tmp/create-tables-now.sql
-          docker compose exec postgres psql -U nicolas -d crud -f /tmp/create-tables-now.sql
+          docker compose exec -T postgres psql -U nicolas -d crud < create-tables-now.sql
+
 
 
       - name: Wait for services to be ready
