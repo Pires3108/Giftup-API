@@ -228,13 +228,13 @@ npm test
 ## 📱 Screenshots
 
 ### Página Inicial
-![Home Page](READMEImages\HomePageScreenShot.png)
+![Home Page](READMEImages/HomePageScreenShot.png)
 
 ### Carrinho de Compras
-![Shopping Cart](READMEImages\marketKartScreenShot.png)
+![Shopping Cart](READMEImages/marketKartScreenShot.png)
 
 ### Pagina de Administrador
-![Admin Panel](READMEImages\AdminPageScreenShot.png)
+![Admin Panel](READMEImages/AdminPageScreenShot.png)
 
 ## 🤝 Contribuição
 
