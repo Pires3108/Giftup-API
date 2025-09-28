@@ -125,8 +125,9 @@ jobs:
 
       - name: Create database tables
         run: |
-          docker cp create-tables-now.sql giftup-api-postgres-1:/tmp/create-tables-now.sql
+          docker cp create-tables-now.sql $(docker compose ps -q postgres):/tmp/create-tables-now.sql
           docker compose exec postgres psql -U nicolas -d crud -f /tmp/create-tables-now.sql
+
 
       - name: Wait for services to be ready
         run: |
