@@ -41,6 +41,7 @@ Parte 2:
 ### 🛍️ Gestão de Produtos
 - CRUD completo de produtos
 - Upload e gerenciamento de imagens
+- PDP e PLP
 
 ### 🛒 Sistema de Pedidos
 - Carrinho de compras funcional (adição e remoção de itens, e alteração da quantidade deles por pedido)

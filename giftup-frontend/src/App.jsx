@@ -10,6 +10,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Profile from "./Pages/Profile";
 import Itens from "./Pages/Itens";
+import ProductDetail from "./Pages/ProductDetail";
 
 
 export default function GiftUpApp() {
@@ -19,6 +20,7 @@ export default function GiftUpApp() {
   const [logado, setLogado] = useState(false);
   const [mensagem, setMensagem] = useState("");
   const [tokenemail, setTokenemail] = useState("");
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
     const checkLoginStatus = () => {
@@ -87,6 +89,16 @@ export default function GiftUpApp() {
       setMensagem("🔒 Faça login para ver seus pedidos.");
       setTimeout(() => setMensagem(""), 3000);
     }
+  };
+
+  const handleProductClick = (productId) => {
+    setSelectedProductId(productId);
+    setScreen("product-detail");
+  };
+
+  const handleBackToHome = () => {
+    setScreen("home");
+    setSelectedProductId(null);
   };
 
   return (
@@ -208,7 +220,8 @@ export default function GiftUpApp() {
           </p>
         )}
 
-        {screen === "home" && <Home />}
+        {screen === "home" && <Home onProductClick={handleProductClick} />}
+        {screen === "product-detail" && <ProductDetail productId={selectedProductId} onBack={handleBackToHome} />}
         {screen === "pedidos" && <Pedidos goToHome={() => handleOptionClick("home")} />}
         {screen === "login" && (
           <Login

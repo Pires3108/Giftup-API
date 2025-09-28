@@ -105,6 +105,7 @@ export default function Itens() {
       const formData = new FormData();
       formData.append("nome_item", item.nome_item);
       formData.append("preco_item", preco.toString());
+      formData.append("descricao_item", item.descricao_item || "");
       if (item.file) formData.append("foto_item", item.file);
 
       if (item.id < 0) {
@@ -153,6 +154,7 @@ export default function Itens() {
       id: nextNewItemId.current, // Usar ID temporário estável
       nome_item: "Novo Produto",
       preco_item: 0,
+      descricao_item: "Descrição do produto",
       foto_item: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vdm88L3RleHQ+PC9zdmc+",
     };
     setItens((prev) => [...prev, newItem]);
@@ -272,6 +274,7 @@ export default function Itens() {
                 style={{
                   width: "100%",
                   padding: "12px 16px",
+                  marginBottom: "12px",
                   border: "1px rgb(126, 126, 126)",
                   borderRadius: "10px",
                   fontSize: "16px",
@@ -290,12 +293,44 @@ export default function Itens() {
                   e.target.style.boxShadow = "0 2px 8px rgba(255, 107, 26, 0.1)";
                 }}
               />
+              <textarea
+                placeholder="Descrição do produto"
+                value={item.descricao_item || ""}
+                onChange={(e) =>
+                  handleChange(item.id, "descricao_item", e.target.value)
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  border: "1px rgb(126, 126, 126)",
+                  borderRadius: "10px",
+                  fontSize: "16px",
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  boxSizing: "border-box",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 2px 8px rgba(255, 107, 26, 0.1)",
+                  minHeight: "80px",
+                  resize: "vertical"
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#ff8c42";
+                  e.target.style.boxShadow = "0 4px 12px rgba(255, 107, 26, 0.2)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#ff6b1a";
+                  e.target.style.boxShadow = "0 2px 8px rgba(255, 107, 26, 0.1)";
+                }}
+              />
             </>
           ) : (
             <>
               <h3 style={{ margin: "0 0 5px 0" }}>{item.nome_item}</h3>
-              <p style={{ margin: 0, color: "#666" }}>
+              <p style={{ margin: "0 0 5px 0", color: "#666" }}>
                 R$ {Number(item.preco_item).toFixed(2)}
+              </p>
+              <p style={{ margin: 0, color: "#888", fontSize: "14px", lineHeight: "1.4" }}>
+                {item.descricao_item || "Sem descrição"}
               </p>
             </>
           )}

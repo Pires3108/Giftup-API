@@ -1,92 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import api from "../Services/API";
-import { isLoggedIn } from "../Services/auth";
 
-export default function ProductCard({ product }) {
-  const [imageUrl, setImageUrl] = useState(null);
-  const [loadingImage, setLoadingImage] = useState(true);
-  const [mensagem, setMensagem] = useState("");
-  const [corMensagem, setCorMensagem] = useState("black");
+export default function ProductCard({ product, onProductClick }) {
+  const [imageError, setImageError] = useState(false);
 
-  const fetchImage = useCallback(async () => {
-    try {
-      setLoadingImage(true);
-
-      const response = await api.get(`/item/${product.id}/download`, {
-        responseType: 'blob'
-      });
-
-      const imageBlob = new Blob([response.data], { type: 'image/png' });
-      const imageUrl = URL.createObjectURL(imageBlob);
-      setImageUrl(imageUrl);
-    } catch (error) {
-      console.error('Erro ao carregar imagem:', error);
-      setImageUrl(null);
-    } finally {
-      setLoadingImage(false);
-    }
-  }, [product.id]);
-
-  useEffect(() => {
-    if (product.id) {
-      fetchImage();
-    }
-
-    return () => {
-      if (imageUrl && imageUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(imageUrl);
-      }
-    };
-  }, [fetchImage, product.id, imageUrl]);
-
-  async function handleAddToCart() {
-    if (!isLoggedIn()) {
-      setMensagem("🔒 Faça login para adicionar ao carrinho");
-      setCorMensagem("red");
-      setTimeout(() => {
-        setMensagem("");
-      }, 3000);
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Token não encontrado");
-      
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const clienteId = payload.id || payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-
-      const novoPedido = {
-        cliente_id: clienteId,
-        itens: [
-          {
-            item_id: product.id,
-            quantidade: 1
-          }
-        ]
-      };
-      
-      await api.post("/pedido", novoPedido);
-
-      setMensagem("✅ Item adicionado ao carrinho!");
-      setCorMensagem("green");
-      setTimeout(() => {
-        setMensagem("");
-      }, 3000);
-
-    } catch (error) {
-      let errorMessage = "Erro desconhecido";
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      setMensagem(`❌ Erro ao adicionar item no carrinho: ${errorMessage}`);
-      setCorMensagem("red");
-      setTimeout(() => {
-        setMensagem("");
-      }, 3000);
+  function handleViewProduct() {
+    if (onProductClick) {
+      onProductClick(product.id);
     }
   };
 
@@ -105,21 +25,18 @@ export default function ProductCard({ product }) {
           justifyContent: "center",
           background: "white"
         }}>
-        {loadingImage ? (
-          <div style={{ color: "#666" }}>
-            Carregando imagem...
-          </div>
-        ) : imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={product.nome_item}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover"
-            }}
-          />
-        ) : (
+        <img
+          src={`/api/v1/item/${product.id}/download?t=${Date.now()}`}
+          alt={product.nome_item}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: imageError ? "none" : "block"
+          }}
+          onError={() => setImageError(true)}
+        />
+        {imageError && (
           <div style={{ 
             color: "#999", 
             fontSize: "14px",
@@ -127,7 +44,8 @@ export default function ProductCard({ product }) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height: "100%"
+            height: "100%",
+            background: "#f0f0f0"
           }}>
             Sem imagem
           </div>
@@ -152,7 +70,7 @@ export default function ProductCard({ product }) {
           Preço: R$ {product.preco_item.toFixed(2).replace('.', ',')}
         </p>
         <button
-          onClick={handleAddToCart}
+          onClick={handleViewProduct}
           style={{
             width: "100%",
             marginTop: "10px",
@@ -163,14 +81,9 @@ export default function ProductCard({ product }) {
             cursor: "pointer",
             border: "none"
           }}>
-          Adicionar ao Carrinho
+          Ver Produto
         </button>
       </div>
-      {mensagem && (
-        <p style={{ marginTop: "15px", color: corMensagem, fontWeight: "bold" }}>
-          {mensagem}
-        </p>
-      )}
     </div>
   );
 }

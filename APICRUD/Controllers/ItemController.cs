@@ -33,7 +33,7 @@ namespace APICRUD.Controllers
 
             var preco = decimal.Parse(itemViewModel.preco_item, System.Globalization.CultureInfo.InvariantCulture);
 
-            var newItem = new item(itemViewModel.nome_item, preco, fotoPath);
+            var newItem = new item(itemViewModel.nome_item, preco, fotoPath, itemViewModel.descricao_item);
 
             _itemRepository.AddItem(newItem);
             return Ok();
@@ -51,6 +51,7 @@ public IActionResult Update(int id, [FromForm] itemViewModel itemViewModel)
 
     itemExistente.nome_item = itemViewModel.nome_item;
     itemExistente.preco_item = decimal.Parse(itemViewModel.preco_item, System.Globalization.CultureInfo.InvariantCulture);
+    itemExistente.descricao_item = itemViewModel.descricao_item;
 
     if (itemViewModel.foto_item != null)
     {

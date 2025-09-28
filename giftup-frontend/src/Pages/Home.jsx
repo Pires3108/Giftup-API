@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import api from "../Services/API";
 
-export default function Home() {
+export default function Home({ onProductClick }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -124,7 +124,8 @@ export default function Home() {
         {products.map(product => (
           <ProductCard 
           key={product.id}
-          product={product} 
+          product={product}
+          onProductClick={onProductClick}
         />
         ))}
       </div>
