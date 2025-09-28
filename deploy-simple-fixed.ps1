@@ -1,7 +1,5 @@
-# Script simplificado para deploy no Cloud Run
 Write-Host "=== Deploy Simplificado no Cloud Run ===" -ForegroundColor Green
 
-# Configurar variaveis
 $PROJECT_ID = "project-4ff72848-5923-4058-b7a"
 $SERVICE_NAME = "giftup-api"
 $REGION = "us-central1"
@@ -9,7 +7,6 @@ $IMAGE_NAME = "gcr.io/$PROJECT_ID/$SERVICE_NAME"
 
 Write-Host "Projeto: $PROJECT_ID" -ForegroundColor Yellow
 
-# Fazer build local primeiro
 Write-Host "Fazendo build local da imagem..." -ForegroundColor Yellow
 docker build -f ./APICRUD/Dockerfile.clean -t $SERVICE_NAME ./APICRUD
 
