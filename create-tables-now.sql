@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS itens (
     id SERIAL PRIMARY KEY,
     nome_item VARCHAR(100) NOT NULL,
     preco_item DECIMAL(10,2) NOT NULL,
-    foto_item VARCHAR(255) NOT NULL
+    foto_item VARCHAR(255) NOT NULL,
+    descricao_item TEXT
 );
 
 CREATE TABLE IF NOT EXISTS pedidos (
