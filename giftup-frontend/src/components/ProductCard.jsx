@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import api from "../Services/API";
 
 export default function ProductCard({ product, onProductClick }) {
   const [imageError, setImageError] = useState(false);
