@@ -176,7 +176,7 @@ export default function ProductDetail({ productId, onBack }) {
         gridTemplateColumns: "1fr 1fr", 
         gap: "40px", 
         alignItems: "start" 
-      }}>
+      }} className="product-detail-grid">
         {/* Imagem do Produto */}
         <div style={{ 
           background: "white", 
@@ -242,7 +242,7 @@ export default function ProductDetail({ productId, onBack }) {
             fontWeight: "bold", 
             color: "orange", 
             marginBottom: "20px" 
-          }}>
+          }} className="price">
             R$ {product.preco_item.toFixed(2).replace('.', ',')}
           </div>
 
@@ -259,13 +259,13 @@ export default function ProductDetail({ productId, onBack }) {
               lineHeight: "1.6", 
               color: "#666",
               margin: 0
-            }}>
+            }} className="description">
               {product.descricao_item || "Descrição não disponível."}
             </p>
           </div>
 
           {/* Seletor de Quantidade */}
-          <div style={{ marginBottom: "30px" }}>
+          <div style={{ marginBottom: "30px" }} className="quantity-section">
             <h3 style={{ 
               fontSize: "18px", 
               marginBottom: "15px", 
@@ -344,6 +344,7 @@ export default function ProductDetail({ productId, onBack }) {
               gap: "10px",
               transition: "background 0.3s"
             }}
+            className="add-to-cart-btn"
             onMouseOver={(e) => e.target.style.background = "#e67e00"}
             onMouseOut={(e) => e.target.style.background = "orange"}
           >
@@ -367,6 +368,68 @@ export default function ProductDetail({ productId, onBack }) {
           )}
         </div>
       </div>
+      
+      {/* CSS Responsivo */}
+      <style>{`
+        @media (max-width: 768px) {
+          .product-detail-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          
+          .product-detail-grid > div {
+            padding: 15px !important;
+          }
+          
+          .product-detail-grid h1 {
+            font-size: 24px !important;
+          }
+          
+          .product-detail-grid .price {
+            font-size: 20px !important;
+          }
+          
+          .product-detail-grid .description {
+            font-size: 14px !important;
+          }
+          
+          .product-detail-grid .quantity-section h3 {
+            font-size: 16px !important;
+          }
+          
+          .product-detail-grid .add-to-cart-btn {
+            font-size: 16px !important;
+            padding: 12px 20px !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .product-detail-grid {
+            padding: 10px !important;
+          }
+          
+          .product-detail-grid > div {
+            padding: 10px !important;
+          }
+          
+          .product-detail-grid h1 {
+            font-size: 20px !important;
+          }
+          
+          .product-detail-grid .price {
+            font-size: 18px !important;
+          }
+          
+          .product-detail-grid .description {
+            font-size: 13px !important;
+          }
+          
+          .product-detail-grid .add-to-cart-btn {
+            font-size: 14px !important;
+            padding: 10px 15px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
