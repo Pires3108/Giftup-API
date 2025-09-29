@@ -28,7 +28,7 @@ Parte 2:
 
 - Prototipação das telas no Figma:
 
-    [Figma GiftUp](https://lucid.app/lucidchart/a03c70d2-d515-4af4-9074-fc511bf5d1e8/edit?viewport_loc=-1008%2C-181%2C2510%2C1117%2C0_0&invitationId=inv_2b6ebada-9857-4f41-b3bd-aa3fd288765f)
+    [Figma GiftUp](https://www.figma.com/proto/YJOGP2tdTIH0wo31k9iY7E/GiftUp?node-id=92-857&t=L7ztExGEgWZxAesB-0&scaling=scale-down&content-scaling=fixed&page-id=92%3A707)
 
 
 ## ✨ Funcionalidades
