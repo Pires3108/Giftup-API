@@ -17,7 +17,6 @@ export default function Itens() {
       console.log("Resposta da API:", response.data);
       console.log("Status da resposta:", response.status);
       
-      // Verificar se a resposta é um array
       if (Array.isArray(response.data)) {
         setItens(response.data);
         console.log("Itens carregados com sucesso:", response.data.length);
@@ -151,7 +150,7 @@ export default function Itens() {
 
   const handleAdd = () => {
     const newItem = {
-      id: nextNewItemId.current, // Usar ID temporário estável
+      id: nextNewItemId.current,
       nome_item: "Novo Produto",
       preco_item: 0,
       descricao_item: "Descrição do produto",
@@ -159,7 +158,7 @@ export default function Itens() {
     };
     setItens((prev) => [...prev, newItem]);
     setEditando(newItem.id);
-    nextNewItemId.current--; // Decrementar para o próximo novo item
+    nextNewItemId.current--;
   };
 
   const handleCancel = (id) => {
@@ -169,7 +168,6 @@ export default function Itens() {
     setEditando(null);
   };
 
-  // Memoizar a lista de itens para evitar re-renderizações desnecessárias
   const itensRenderizados = useMemo(() => {
     return itens.map((item) => (
       <div

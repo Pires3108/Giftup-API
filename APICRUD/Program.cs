@@ -8,11 +8,6 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Let ASP.NET Core bind using configuration and environment variables (ASPNETCORE_URLS)
-// Avoid hardcoding ports to prevent address-in-use conflicts during development
-
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -123,7 +118,6 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-// Swagger habilitado para Development e Production
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

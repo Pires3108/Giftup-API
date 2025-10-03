@@ -10,7 +10,6 @@ namespace APICRUD.Infraestrutura
 
         public DatabaseConnection(IConfiguration configuration)
         {
-            // Tenta ler das variáveis de ambiente primeiro
             var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "34.134.158.190";
             var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
             var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? "crud";

@@ -14,7 +14,6 @@ export default function Home({ onProductClick }) {
       const res = await api.get("/item");
       console.log("Resposta da API (Home):", res.data);
       
-      // Verificar se a resposta é um array
       if (Array.isArray(res.data)) {
         setProducts(res.data);
       } else {

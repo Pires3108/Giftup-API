@@ -45,7 +45,6 @@ namespace APICRUD.Infraestrutura
         public void AddItem(item item)
         {
             using var connection = _dbConnection.GetConnection();
-            // Verificar se a coluna descricao_item existe
             var checkColumnQuery = "SELECT column_name FROM information_schema.columns WHERE table_name = 'itens' AND column_name = 'descricao_item'";
             bool hasDescricaoColumn = false;
             
@@ -89,8 +88,6 @@ namespace APICRUD.Infraestrutura
         public void UpdateItem(item item)
         {
             using var connection = _dbConnection.GetConnection();
-            
-            // Verificar se a coluna descricao_item existe
             var checkColumnQuery = "SELECT column_name FROM information_schema.columns WHERE table_name = 'itens' AND column_name = 'descricao_item'";
             bool hasDescricaoColumn = false;
             

@@ -13,7 +13,7 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 2. Build e push da imagem
+
 Write-Host "Fazendo build da imagem Docker..." -ForegroundColor Cyan
 gcloud builds submit --tag gcr.io/project-4ff72848-5923-4058-b7a/giftup-api
 if ($LASTEXITCODE -ne 0) {
@@ -21,7 +21,7 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 3. Deploy com variáveis de ambiente
+
 Write-Host "Fazendo deploy com variáveis de ambiente..." -ForegroundColor Cyan
 gcloud run deploy giftup-api `
     --image gcr.io/project-4ff72848-5923-4058-b7a/giftup-api `

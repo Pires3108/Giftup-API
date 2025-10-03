@@ -41,7 +41,6 @@ namespace APICRUD.Controllers
                     return BadRequest("Lista de itens é obrigatória");
                 }
                 
-                // Validar cada item
                 foreach (var item in dto.itens)
                 {
                     if (item.item_id <= 0)

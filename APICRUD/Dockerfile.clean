@@ -1,43 +1,29 @@
-# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy project file
 COPY *.csproj ./
-
-# Restore dependencies
 RUN dotnet restore --verbosity normal
 
-# Copy source code
 COPY . .
 
-# Clean any Windows-specific files that might cause issues
 RUN find . -name "*.user" -delete
 RUN find . -name "bin" -type d -exec rm -rf {} + 2>/dev/null || true
 RUN find . -name "obj" -type d -exec rm -rf {} + 2>/dev/null || true
 
-# Build and publish
 RUN dotnet publish -c Release -o /app/publish
 
-# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# Create Storage directory
 RUN mkdir -p /app/Storage
 
-# Copy published output
 COPY --from=build /app/publish .
 
-# Copy Storage directory with images
 COPY --from=build /src/Storage /app/Storage
 
-# Set environment variables
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-# Expose port
 EXPOSE 8080
 
-# Start the application
 ENTRYPOINT ["dotnet", "APICRUD.dll"]

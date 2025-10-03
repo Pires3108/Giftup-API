@@ -15,11 +15,10 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Fazer tag para o registry
 Write-Host "Fazendo tag da imagem..." -ForegroundColor Yellow
 docker tag $SERVICE_NAME $IMAGE_NAME
 
-# Fazer push para o registry
+
 Write-Host "Fazendo push para o registry..." -ForegroundColor Yellow
 docker push $IMAGE_NAME
 
@@ -28,7 +27,7 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Deploy no Cloud Run
+
 Write-Host "Fazendo deploy no Cloud Run..." -ForegroundColor Yellow
 gcloud run deploy $SERVICE_NAME --image $IMAGE_NAME --platform managed --region $REGION --allow-unauthenticated --port 8080 --memory 512Mi --cpu 1 --max-instances 10 --set-env-vars "ASPNETCORE_ENVIRONMENT=Production"
 

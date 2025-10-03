@@ -10,11 +10,11 @@
 
 O **GiftUp** é uma aplicação completa de e-commerce desenvolvida para aprendizado seguindo as orientações de um desafio em duas partes (até 17/09), oferecendo uma plataforma para venda de produtos de presentes. O sistema é composto por uma API RESTful em .NET 8 e um frontend em React. Projeto ainda está em desenvolvimento.
 
-Parte 1:
+# Parte 1 do desafio:
 
 ![LousaDesafioParteUm](READMEImages/ImagemLousaParteUm.jpeg)
 
-Parte 2:
+# Parte 2 do desafio:
 
 ![LousaDesafioParteUm](READMEImages/ImagemLousaParteDois.jpeg)
 
@@ -30,6 +30,21 @@ Parte 2:
 
     [Figma GiftUp](https://www.figma.com/proto/YJOGP2tdTIH0wo31k9iY7E/GiftUp?node-id=92-857&t=L7ztExGEgWZxAesB-0&scaling=scale-down&content-scaling=fixed&page-id=92%3A707)
 
+## Documentos parte 2
+  ### C4:
+  - Link:
+    
+    - [C4Model](https://drive.google.com/file/d/1aFimABI4kGB4HiP8o2a4tDBI50-4DJga/view?usp=sharing)
+
+  - Fotos:
+
+    - C4 model nivel 1:
+
+      ![FotoC4N1](READMEImages/C4Model_nivel1.png)
+
+    - C4 model nivel 2:
+
+      ![FotoC4N2](READMEImages/C4Model_Nivel2.png)
 
 ## ✨ Funcionalidades
 

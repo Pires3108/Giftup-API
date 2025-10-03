@@ -80,7 +80,6 @@ namespace APICRUD.Infraestrutura
                 Console.WriteLine($"Buscando pedidos para cliente ID: {clienteId}");
                 using var connection = _dbConnection.GetConnection();
                 
-                // Primeiro, vamos verificar se existem pedidos para este cliente
                 using var checkCommand = new NpgsqlCommand("SELECT COUNT(*) FROM pedidos WHERE cliente_id = @clienteId", connection);
                 checkCommand.Parameters.AddWithValue("@clienteId", clienteId);
                 var pedidoCount = (long)checkCommand.ExecuteScalar();
@@ -158,7 +157,6 @@ namespace APICRUD.Infraestrutura
             {
                 Console.WriteLine($"Adicionando pedido para cliente {pedido.cliente_id} com {pedido.PedidoItens.Count} itens");
                 
-                // Validar se o cliente existe
                 using var clienteCheckCommand = new NpgsqlCommand("SELECT COUNT(*) FROM clientes WHERE id = @clienteId", connection, transaction);
                 clienteCheckCommand.Parameters.AddWithValue("@clienteId", pedido.cliente_id);
                 var clienteExists = (long)clienteCheckCommand.ExecuteScalar() > 0;
@@ -186,7 +184,6 @@ namespace APICRUD.Infraestrutura
                 {
                     Console.WriteLine($"Adicionando item: pedido_id={pedidoId}, item_id={item.item_id}, quantidade={item.quantidade}");
                     
-                    // Validar se o item existe
                     using var itemCheckCommand = new NpgsqlCommand("SELECT COUNT(*) FROM itens WHERE id = @itemId", connection, transaction);
                     itemCheckCommand.Parameters.AddWithValue("@itemId", item.item_id);
                     var itemExists = (long)itemCheckCommand.ExecuteScalar() > 0;
@@ -196,7 +193,6 @@ namespace APICRUD.Infraestrutura
                         throw new Exception($"Item com ID {item.item_id} não encontrado");
                     }
                     
-                    // Buscar o preço do item
                     using var precoCommand = new NpgsqlCommand("SELECT preco_item FROM itens WHERE id = @itemId", connection, transaction);
                     precoCommand.Parameters.AddWithValue("@itemId", item.item_id);
                     var preco = (decimal)precoCommand.ExecuteScalar();
@@ -341,7 +337,6 @@ namespace APICRUD.Infraestrutura
 
                 foreach (var item in itens)
                 {
-                    // Buscar o preço do item
                     using var precoCommand = new NpgsqlCommand("SELECT preco_item FROM itens WHERE id = @itemId", connection, transaction);
                     precoCommand.Parameters.AddWithValue("@itemId", item.item_id);
                     var preco = (decimal)precoCommand.ExecuteScalar();

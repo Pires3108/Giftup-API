@@ -14,7 +14,6 @@ namespace APICRUD.Infraestrutura
 
         public void AddCliente(cliente cliente)
         {
-            // Don't hash here - it's already hashed in the controller
             using var connection = _dbConnection.GetConnection();
             using var command = new NpgsqlCommand(
                 "INSERT INTO clientes (nome_cliente, datanascimento_cliente, email_cliente, senha) VALUES (@nome, @dataNascimento, @email, @senha) RETURNING id",

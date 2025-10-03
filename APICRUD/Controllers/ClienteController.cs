@@ -46,7 +46,7 @@ namespace APICRUD.Controllers
             }
             catch (Npgsql.PostgresException ex) when (ex.SqlState == "23505")
             {
-                // 23505: unique_violation
+                // 23505: violação de chave única
                 return Conflict(new { mensagem = "email_cliente já cadastrado" });
             }
             catch (Exception ex)
